@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group 'com.wujiuye'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // excel表格
+    compile group: 'org.apache.poi', name: 'poi', version: '3.17'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+    compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '3.17'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
