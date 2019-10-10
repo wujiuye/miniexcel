@@ -246,3 +246,67 @@ File file = writer.write(new ExcelWriterListener() {....})
 ###意见反馈
 当前miniexcel被用在作者所在公司的项目中，如果遇到bug我会及时修复。也欢迎大家使用，欢迎大家参与到miniexcel开源项目来，发现问题给作者提个醒，或者拉一个分支修复，感谢！！！
 
+
+### 版本更新说明
+
+>日期：2019-10-10
+>
+>更新说明：
+>1、提供默认的写监听器，应付大部分小数据导出场景。
+>2、提供导出列指示器，实现导出列指示器可以在不使用@ExcelCellTitle注解的情况下，设置导出忽略的字段，设置字段对应导excel的列标题。
+ 
+```java
+/**
+ * @author wujiuye
+ * @version 1.0 on 2019/10/10 {描述：
+ * 列指示器
+ * }
+ */
+public interface ColumnsDesignator {
+
+    /**
+     * 是否忽略该列
+     *
+     * @param column data的数据类型的字段名
+     * @return
+     */
+    boolean isIgnore(String column);
+
+    /**
+     * 是否需要重命名
+     *
+     * @param column data的数据类型的字段名
+     * @return 不需要重命名则直接返回参数column，需要重命名则返回重命名后的列名（excel文件的标题名称）
+     */
+    String renameColumn(String column);
+
+}
+```
+
+```java
+public void testWrite(){
+    ......
+    File target = writer.write(new DefaultExcelWriteListener(dataList, 1000), new ColumnsDesignator() {
+
+            @Override
+            public boolean isIgnore(String column) {
+                if (CollectionUtils.isEmpty(columns)) {
+                    return false;
+                }
+                return !columns.contains(column);
+            }
+
+            @Override
+            public String renameColumn(String column) {
+                if (CollectionUtils.isEmpty(columns)
+                        || CollectionUtils.isEmpty(columnNames)) {
+                    return column;
+                }
+                int index = columns.indexOf(column);
+                return columnNames.get(index);
+            }
+        });
+    ......
+}
+```
+
