@@ -16,7 +16,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ExcelCellTitle {
 
-    int cellNumber() default -1;//-1为不参与排序
+    /**
+     * -1为不参与排序
+     *
+     * @return
+     */
+    int cellNumber() default -1;
 
-    String alias();//为null时，取属性的字段名
+    /**
+     * 为null时，取属性的字段名
+     *
+     * @return
+     */
+    String alias();
 }

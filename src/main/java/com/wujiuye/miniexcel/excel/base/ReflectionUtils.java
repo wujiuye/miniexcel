@@ -57,7 +57,7 @@ public class ReflectionUtils {
             sortMap.get(sort).add(metaData);
         }
         int sortIndex = 0;
-        //处理需要排序的列
+        // 处理需要排序的列
         if (sortMap.size() > 0) {
             List<Map.Entry<Integer, List<ExcelMetaData>>> list = new ArrayList<>(sortMap.entrySet());
             Collections.sort(list, (o1, o2) -> o1.getKey() - o2.getKey());
@@ -69,7 +69,7 @@ public class ReflectionUtils {
                 }
             }
         }
-        //没有参与排序的列全部放在最后
+        // 没有参与排序的列全部放在最后
         for (int i = sortIndex; i < sortData.length; i++) {
             sortData[i] = notJoinSort.get(i - sortIndex);
         }

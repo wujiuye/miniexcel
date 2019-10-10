@@ -1,5 +1,8 @@
 package com.wujiuye.miniexcel.excel.writer;
 
+
+import com.wujiuye.miniexcel.excel.base.ColumnsDesignator;
+
 import java.io.File;
 
 /**
@@ -19,19 +22,32 @@ public abstract class AbstractExcelWriter {
             this.fromat = fromat;
         }
 
-        public String getFromat(){
+        public String getFromat() {
             return this.fromat;
         }
     }
 
-    protected String filePath;//文件刷出的路径
+    /**
+     * 文件刷出的路径
+     */
+    protected String filePath;
     protected ExportFormatType format;
-    protected int brushPageSize = 1000;//刷盘记录的大小，即一次导出的记录数，应尽量的少，避免占用太多内存
-    // 每个sheet最大支持1048576行：超出会抛出IllegalArgumentException: Invalid row number (1048576) outside allowable range (0..1048575)
-    protected int sheetSize = 100_000; //每个sheet最多保持多少调记录就自动切换到一个新的sheet
-    protected String sheetNameFromat;//格式中必须包含{sn}
-
-    //sm是第几个sheet，从1开始
+    /**
+     * 刷盘记录的大小，即一次导出的记录数，应尽量的少，避免占用太多内存
+     */
+    protected int brushPageSize = 1000;
+    /**
+     * 每个sheet最大支持1048576行：超出会抛出IllegalArgumentException: Invalid row number (1048576) outside allowable range (0..1048575)
+     */
+    protected int sheetSize = 100_000;
+    /**
+     * 每个sheet最多保持多少调记录就自动切换到一个新的sheet
+     * 格式中必须包含{sn}
+     */
+    protected String sheetNameFromat;
+    /**
+     * sm是第几个sheet，从1开始
+     */
     private final String DEFAULT_SHEETNAME_FROMAT = "sheet_{sn}";
 
     public static AbstractExcelWriter createExcelWriter(String filePath, ExportFormatType format) {
@@ -48,11 +64,6 @@ public abstract class AbstractExcelWriter {
             throw new FormatException("不支持的格式！！！");
         }
         return excelWriter;
-    }
-
-    AbstractExcelWriter(String filePath) {
-        this.filePath = filePath;
-        this.format = ExportFormatType.XLS;
     }
 
     AbstractExcelWriter(String filePath, ExportFormatType format) {
@@ -77,9 +88,22 @@ public abstract class AbstractExcelWriter {
     }
 
     public File write(ExcelWriterListener writerListener) {
-        return this.doWrite(writerListener);
+        return this.doWrite(writerListener, null);
     }
 
-    protected abstract File doWrite(ExcelWriterListener writerListener);
+    /**
+     * 支持指定导出列指示器，更丰富的自定义导致功能
+     *
+     * @param writerListener    写数据监听器
+     * @param columnsDesignator 导出列指示器
+     * @return
+     */
+    public File write(ExcelWriterListener writerListener, ColumnsDesignator columnsDesignator) {
+        return this.doWrite(writerListener, columnsDesignator);
+    }
+
+
+    protected abstract File doWrite(ExcelWriterListener writerListener, ColumnsDesignator columnsDesignator);
+
 
 }

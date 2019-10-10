@@ -1,8 +1,10 @@
 package com.wujiuye.miniexcel.excel.writer;
 
+import com.wujiuye.miniexcel.excel.base.ColumnsDesignator;
 import com.wujiuye.miniexcel.excel.base.ExcelMetaData;
 import com.wujiuye.miniexcel.excel.base.ReflectionUtils;
 import com.wujiuye.miniexcel.excel.utils.DateUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -12,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wujiuye
@@ -20,21 +23,22 @@ import java.util.List;
 public class SXSSFWriter extends AbstractExcelWriter {
 
     private ExcelWriterListener writerListener;
+    private ColumnsDesignator columnsDesignator;
 
     SXSSFWriter(String filePath, ExportFormatType format) {
         super(filePath, format);
     }
 
     @Override
-    protected File doWrite(ExcelWriterListener writerListener) {
+    protected File doWrite(ExcelWriterListener writerListener, ColumnsDesignator columnsDesignator) {
         this.writerListener = writerListener;
+        this.columnsDesignator = columnsDesignator;
         if (writerListener == null) {
             return null;
         }
         try {
             this.realDoWrite();
-            File file = new File(this.filePath + this.format.getFromat());
-            return file;
+            return new File(this.filePath + this.format.getFromat());
         } catch (Exception e) {
             this.writerListener.onError(e);
             return null;
@@ -47,17 +51,17 @@ public class SXSSFWriter extends AbstractExcelWriter {
         if (targetClass == null) {
             throw new RuntimeException("target class not null!!!");
         }
-        List<ExcelMetaData> metaDatas = ReflectionUtils.getFieldWithTargetClass(targetClass);
-        //排序
-        metaDatas = ReflectionUtils.sortField(metaDatas);
+        List<ExcelMetaData> metaDatas = this.analysisColumnsMetaDateByClass(targetClass);
 
-        SXSSFWorkbook wb = new SXSSFWorkbook(this.brushPageSize);//SXSSFWorkbook会先在磁盘创建空间来写，此时并未输出到目标文件
+        // SXSSFWorkbook会先在磁盘创建空间来写，此时并未输出到目标文件
+        SXSSFWorkbook wb = new SXSSFWorkbook(this.brushPageSize);
         int sheetNumber = 1;
-        int currentPageSize;//当前页输出的大小
+        // 当前页输出的大小
+        int currentPageSize;
         int nextLimit = 0;
         Sheet sh = wb.createSheet(this.sheetNameFromat.replace("{sn}", String.valueOf(sheetNumber)));
         int rowIndex = 0;
-        //输出标题
+        // 输出标题
         if (needWriter) {
             rowIndex += writeTitle(sh, metaDatas);
         }
@@ -89,6 +93,27 @@ public class SXSSFWriter extends AbstractExcelWriter {
     }
 
     /**
+     * 解析类型，获取字段的元数据，完成排序、过滤、给标题别名等操作
+     *
+     * @param targetClass
+     * @return
+     */
+    private List<ExcelMetaData> analysisColumnsMetaDateByClass(Class targetClass) {
+        List<ExcelMetaData> metaDatas = ReflectionUtils.getFieldWithTargetClass(targetClass);
+        // 对列做排序操作
+        metaDatas = ReflectionUtils.sortField(metaDatas);
+        if (columnsDesignator != null) {
+            // 过滤不需要的字段
+            metaDatas = metaDatas.stream()
+                    .filter(metaData -> !columnsDesignator.isIgnore(metaData.getFieldName()))
+                    .collect(Collectors.toList());
+            // 重命名列标题名称（根据字段名重新赋予导出的文件的列标题名）
+            metaDatas.forEach(metaData -> metaData.setCellName(columnsDesignator.renameColumn(metaData.getFieldName())));
+        }
+        return metaDatas;
+    }
+
+    /**
      * 输出标题
      *
      * @param sheet
@@ -114,10 +139,9 @@ public class SXSSFWriter extends AbstractExcelWriter {
      * @return
      */
     private int writeData(Sheet sheet, List<ExcelMetaData> titles, List data, int rowIndex) {
-        if (data == null || data.size() == 0) {
+        if (CollectionUtils.isEmpty(data)) {
             throw new RuntimeException("data is null!");
         }
-        //System.out.println("rowIndex=" + rowIndex);
         for (int i = 0; i < data.size(); i++, rowIndex++) {
             Row row = sheet.createRow(rowIndex);
             Object obj = data.get(i);
@@ -140,7 +164,7 @@ public class SXSSFWriter extends AbstractExcelWriter {
                     } else if (cellClass == Double.class || cellClass == double.class) {
                         cell.setCellValue(Double.valueOf(cellDateVlaue.toString()));
                     } else if (cellClass == Date.class) {
-                        DateUtils.parsingDatetime((Date) cellDateVlaue);
+                        cell.setCellValue(DateUtils.parsingDatetime((Date) cellDateVlaue));
                     } else {
                         cell.setCellValue(cellDateVlaue.toString());
                     }
@@ -152,4 +176,5 @@ public class SXSSFWriter extends AbstractExcelWriter {
         }
         return rowIndex;
     }
+
 }

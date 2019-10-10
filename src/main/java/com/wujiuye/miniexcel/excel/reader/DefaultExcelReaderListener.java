@@ -9,10 +9,14 @@ import java.util.stream.Collectors;
  */
 public class DefaultExcelReaderListener implements ExcelReaderListener {
 
-    //sheetName -> {cellIndex->cellName}
+    /**
+     * sheetName -> {cellIndex->cellName}
+     */
     private Map<String, Map<Integer, String>> cellTitleMap = new HashMap<>();
     private String currentSheetName;
-    //cellName -> value
+    /**
+     * cellName -> value
+     */
     private List<Map<String, Object>> data = new ArrayList<>();
     private int currentRow = -1;
     private Map<String, Object> currentRowData = new HashMap<>();
