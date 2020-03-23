@@ -2,22 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="191cbadd-3095-41c3-a448-10f3395dc402" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.8/fileChanges/last-build.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.8/fileHashes/fileHashes.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.8/fileHashes/fileHashes.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.8/taskHistory/taskHistory.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.8/taskHistory/taskHistory.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/vcsWorkingDirs/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,7 +209,7 @@
       <workItem from="1570684009049" duration="14000" />
       <workItem from="1570688362378" duration="253000" />
       <workItem from="1584943589965" duration="57000" />
-      <workItem from="1584943660632" duration="4927000" />
+      <workItem from="1584943660632" duration="5193000" />
     </task>
     <task id="LOCAL-00001" summary="1、提供默认的写监听器，应付大部分小数据导出场景。&#10;2、提供导出列指示器，实现导出列指示器可以在不使用@ExcelCellTitle注解的情况下，设置导出忽略的字段，设置字段对应导excel的列标题。">
       <created>1570680617256</created>
@@ -247,7 +232,21 @@
       <option name="project" value="LOCAL" />
       <updated>1570681099068</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="配置发布到maven中央仓库">
+      <created>1584949967045</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1584949967045</updated>
+    </task>
+    <task id="LOCAL-00005" summary="解决冲突问题">
+      <created>1584950073160</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1584950073160</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,13 +270,15 @@
     <MESSAGE value="版本更新说明" />
     <MESSAGE value="根系README.md" />
     <MESSAGE value="更新README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="更新README.md" />
+    <MESSAGE value="配置发布到maven中央仓库" />
+    <MESSAGE value="解决冲突问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="解决冲突问题" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="450" y="137" key="CommitChangelistDialog2" timestamp="1584949966841">
+    <state x="450" y="137" key="CommitChangelistDialog2" timestamp="1584950072964">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
-    <state x="450" y="137" key="CommitChangelistDialog2/57.23.1623.1027@57.23.1623.1027" timestamp="1584949966841" />
+    <state x="450" y="137" key="CommitChangelistDialog2/57.23.1623.1027@57.23.1623.1027" timestamp="1584950072964" />
     <state width="1581" height="329" key="GridCell.Tab.0.bottom" timestamp="1584949714861">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
@@ -298,14 +299,14 @@
     </state>
     <state width="1581" height="280" key="GridCell.Tab.0.right/56.23.1624.1027@56.23.1624.1027" timestamp="1584947067527" />
     <state width="1581" height="329" key="GridCell.Tab.0.right/57.23.1623.1027@57.23.1623.1027" timestamp="1584949714860" />
-    <state x="468" y="278" key="Vcs.Push.Dialog.v2" timestamp="1584949995228">
+    <state x="468" y="278" key="Vcs.Push.Dialog.v2" timestamp="1584950126681">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
-    <state x="468" y="278" key="Vcs.Push.Dialog.v2/57.23.1623.1027@57.23.1623.1027" timestamp="1584949995228" />
-    <state x="566" y="336" key="git4idea.merge.GitPullDialog" timestamp="1584950008434">
+    <state x="468" y="278" key="Vcs.Push.Dialog.v2/57.23.1623.1027@57.23.1623.1027" timestamp="1584950126681" />
+    <state x="566" y="336" key="git4idea.merge.GitPullDialog" timestamp="1584950104142">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
-    <state x="566" y="336" key="git4idea.merge.GitPullDialog/57.23.1623.1027@57.23.1623.1027" timestamp="1584950008434" />
+    <state x="566" y="336" key="git4idea.merge.GitPullDialog/57.23.1623.1027@57.23.1623.1027" timestamp="1584950104142" />
   </component>
   <component name="masterDetails">
     <states>
