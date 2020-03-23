@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="191cbadd-3095-41c3-a448-10f3395dc402" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/publications/publishMyProjectMiniexcel/pom-default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/publications/publishMyProjectMiniexcel/pom-default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/jar/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/jar/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/publishPublishMyProjectMiniexcelPublicationToReleaseRepository/com/github/wujiuye/miniexcel/maven-metadata-remote.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/publishPublishMyProjectMiniexcelPublicationToReleaseRepository/com/github/wujiuye/miniexcel/maven-metadata-remote.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/publishPublishMyProjectMiniexcelPublicationToReleaseRepository/com/github/wujiuye/miniexcel/resolver-status.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/publishPublishMyProjectMiniexcelPublicationToReleaseRepository/com/github/wujiuye/miniexcel/resolver-status.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/sourcesJar/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/sourcesJar/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,7 +253,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584950073160</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="解决冲突问题">
+      <created>1584961153142</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1584961153142</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,33 +289,39 @@
     <option name="LAST_COMMIT_MESSAGE" value="解决冲突问题" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="450" y="137" key="CommitChangelistDialog2" timestamp="1584950072964">
-      <screen x="57" y="23" width="1623" height="1027" />
+    <state x="449" y="137" key="CommitChangelistDialog2" timestamp="1584961153013">
+      <screen x="56" y="23" width="1624" height="1027" />
     </state>
+    <state x="449" y="137" key="CommitChangelistDialog2/56.23.1624.1027@56.23.1624.1027" timestamp="1584961153013" />
     <state x="450" y="137" key="CommitChangelistDialog2/57.23.1623.1027@57.23.1623.1027" timestamp="1584950072964" />
-    <state width="1581" height="329" key="GridCell.Tab.0.bottom" timestamp="1584949714861">
+    <state width="1581" height="329" key="GridCell.Tab.0.bottom" timestamp="1584977982993">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
-    <state width="1581" height="280" key="GridCell.Tab.0.bottom/56.23.1624.1027@56.23.1624.1027" timestamp="1584947067527" />
-    <state width="1581" height="329" key="GridCell.Tab.0.bottom/57.23.1623.1027@57.23.1623.1027" timestamp="1584949714861" />
-    <state width="1581" height="329" key="GridCell.Tab.0.center" timestamp="1584949714860">
+    <state width="1581" height="329" key="GridCell.Tab.0.bottom/1680.23.1920.1057/57.23.1623.1027@57.23.1623.1027" timestamp="1584977982993" />
+    <state width="1581" height="329" key="GridCell.Tab.0.bottom/56.23.1624.1027@56.23.1624.1027" timestamp="1584961389942" />
+    <state width="1581" height="329" key="GridCell.Tab.0.bottom/57.23.1623.1027@57.23.1623.1027" timestamp="1584961487996" />
+    <state width="1581" height="329" key="GridCell.Tab.0.center" timestamp="1584977982992">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
-    <state width="1581" height="280" key="GridCell.Tab.0.center/56.23.1624.1027@56.23.1624.1027" timestamp="1584947067526" />
-    <state width="1581" height="329" key="GridCell.Tab.0.center/57.23.1623.1027@57.23.1623.1027" timestamp="1584949714860" />
-    <state width="1581" height="329" key="GridCell.Tab.0.left" timestamp="1584949714859">
+    <state width="1581" height="329" key="GridCell.Tab.0.center/1680.23.1920.1057/57.23.1623.1027@57.23.1623.1027" timestamp="1584977982992" />
+    <state width="1581" height="329" key="GridCell.Tab.0.center/56.23.1624.1027@56.23.1624.1027" timestamp="1584961389941" />
+    <state width="1581" height="329" key="GridCell.Tab.0.center/57.23.1623.1027@57.23.1623.1027" timestamp="1584961487995" />
+    <state width="1581" height="329" key="GridCell.Tab.0.left" timestamp="1584977982992">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
-    <state width="1581" height="280" key="GridCell.Tab.0.left/56.23.1624.1027@56.23.1624.1027" timestamp="1584947067526" />
-    <state width="1581" height="329" key="GridCell.Tab.0.left/57.23.1623.1027@57.23.1623.1027" timestamp="1584949714859" />
-    <state width="1581" height="329" key="GridCell.Tab.0.right" timestamp="1584949714860">
+    <state width="1581" height="329" key="GridCell.Tab.0.left/1680.23.1920.1057/57.23.1623.1027@57.23.1623.1027" timestamp="1584977982992" />
+    <state width="1581" height="329" key="GridCell.Tab.0.left/56.23.1624.1027@56.23.1624.1027" timestamp="1584961389940" />
+    <state width="1581" height="329" key="GridCell.Tab.0.left/57.23.1623.1027@57.23.1623.1027" timestamp="1584961487995" />
+    <state width="1581" height="329" key="GridCell.Tab.0.right" timestamp="1584977982993">
       <screen x="57" y="23" width="1623" height="1027" />
     </state>
-    <state width="1581" height="280" key="GridCell.Tab.0.right/56.23.1624.1027@56.23.1624.1027" timestamp="1584947067527" />
-    <state width="1581" height="329" key="GridCell.Tab.0.right/57.23.1623.1027@57.23.1623.1027" timestamp="1584949714860" />
-    <state x="468" y="278" key="Vcs.Push.Dialog.v2" timestamp="1584950126681">
-      <screen x="57" y="23" width="1623" height="1027" />
+    <state width="1581" height="329" key="GridCell.Tab.0.right/1680.23.1920.1057/57.23.1623.1027@57.23.1623.1027" timestamp="1584977982993" />
+    <state width="1581" height="329" key="GridCell.Tab.0.right/56.23.1624.1027@56.23.1624.1027" timestamp="1584961389941" />
+    <state width="1581" height="329" key="GridCell.Tab.0.right/57.23.1623.1027@57.23.1623.1027" timestamp="1584961487995" />
+    <state x="467" y="278" key="Vcs.Push.Dialog.v2" timestamp="1584961159677">
+      <screen x="56" y="23" width="1624" height="1027" />
     </state>
+    <state x="467" y="278" key="Vcs.Push.Dialog.v2/56.23.1624.1027@56.23.1624.1027" timestamp="1584961159677" />
     <state x="468" y="278" key="Vcs.Push.Dialog.v2/57.23.1623.1027@57.23.1623.1027" timestamp="1584950126681" />
     <state x="566" y="336" key="git4idea.merge.GitPullDialog" timestamp="1584950104142">
       <screen x="57" y="23" width="1623" height="1027" />

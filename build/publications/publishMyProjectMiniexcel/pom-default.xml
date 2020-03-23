@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- This module was also published with a richer model, Gradle metadata,  -->
+  <!-- which should be used instead. Do not delete the following line which  -->
+  <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
+  <!-- that they should prefer consuming it instead. -->
+  <!-- do_not_remove: published-with-gradle-metadata -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.wujiuye</groupId>
   <artifactId>miniexcel</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0-RELEASE</version>
+  <name>miniexcel</name>
+  <description>基于poi封装的一套excel文件读写工具，完美解决oom问题。优雅的使用设计模式提供更简单的使用姿势！更有详细的使用教程。如需获取帮助，关注微信公众号:Java艺术</description>
+  <url>https://github.com/wujiuye/miniexcel</url>
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>wujiuye</id>
+      <name>wujiuye</name>
+      <email>419611821@qq.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/wujiuye/miniexcel.git</connection>
+    <developerConnection>scm:git:https://github.com/wujiuye/miniexcel.git</developerConnection>
+    <url>https://github.com/wujiuye/miniexcel</url>
+  </scm>
   <dependencies>
     <dependency>
       <groupId>org.apache.poi</groupId>

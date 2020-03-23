@@ -2,10 +2,12 @@ plugins {
     id 'java'
     // maven 发布插件
     id 'maven-publish'
+    // 签名插件
+    id 'signing'
 }
 
 group 'com.github.wujiuye'
-version '1.0.0'
+version '1.1.0-RELEASE'
 
 repositories {
     mavenCentral()
@@ -26,6 +28,12 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
+// 生成 javadoc jar
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
 publishing {
     publications {
         // 推送
@@ -34,6 +42,32 @@ publishing {
             from components.java
             // 打包源码
             artifact sourcesJar
+            // javadoc
+            artifact javadocJar
+
+            pom {
+                name = "miniexcel"
+                description = "基于poi封装的一套excel文件读写工具，完美解决oom问题。优雅的使用设计模式提供更简单的使用姿势！更有详细的使用教程。如需获取帮助，关注微信公众号:Java艺术"
+                url = "https://github.com/wujiuye/miniexcel"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "wujiuye"
+                        name = "wujiuye"
+                        email = "419611821@qq.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://github.com/wujiuye/miniexcel.git"
+                    developerConnection = "scm:git:https://github.com/wujiuye/miniexcel.git"
+                    url = "https://github.com/wujiuye/miniexcel"
+                }
+            }
         }
     }
     // 到 https://oss.sonatype.org/#nexus-search; 搜索是否上传成功
@@ -58,3 +92,9 @@ publishing {
         }
     }
 }
+
+// 必须在 publishing 配置之后
+signing {
+    sign publishing.publications.publishMyProjectMiniexcel
+}
+

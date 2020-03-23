@@ -3,11 +3,12 @@
   <groupId>com.github.wujiuye</groupId>
   <artifactId>miniexcel</artifactId>
   <versioning>
-    <release>1.0.0</release>
+    <release>1.1.0-RELEASE</release>
     <versions>
       <version>1.1.0</version>
       <version>1.0.0</version>
+      <version>1.1.0-RELEASE</version>
     </versions>
-    <lastUpdated>20200323074626</lastUpdated>
+    <lastUpdated>20200323110501</lastUpdated>
   </versioning>
 </metadata>
