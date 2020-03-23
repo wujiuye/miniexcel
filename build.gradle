@@ -1,11 +1,11 @@
 plugins {
     id 'java'
+    // maven 发布插件
+    id 'maven-publish'
 }
 
-group 'com.wujiuye'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
+group 'com.github.wujiuye'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -18,4 +18,43 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '3.17'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// 打包源码
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        // 推送
+        publishMyProjectMiniexcel(MavenPublication) {
+            // 编译jar包
+            from components.java
+            // 打包源码
+            artifact sourcesJar
+        }
+    }
+    // 到 https://oss.sonatype.org/#nexus-search; 搜索是否上传成功
+    repositories {
+        // 发布Release版本可在版本号后面带上'-RELEASE'，也可不带
+        maven {
+            name 'Release'
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            credentials {
+                username = "${NEXUS_USERNAME}"
+                password = "${NEXUS_PASSWORD}"
+            }
+        }
+        // 发布Snapshot快照版本必须在版本号后面加上'-SNAPSHOT'
+        maven {
+            name = 'Snapshot'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots'
+            credentials {
+                username = "${NEXUS_USERNAME}"
+                password = "${NEXUS_PASSWORD}"
+            }
+        }
+    }
 }
