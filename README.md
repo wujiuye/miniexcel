@@ -1,4 +1,4 @@
-###miniexcel简介
+### miniexcel简介
 miniexcel主要目的是解决读写大数据量（上w条记录）时导致的OOM问题，解决办法就是基于事件模式读，使用SXSSFWorkbook写。poi提供的基于事件模式的读，在eventusermodel包下，相对来说实现比较复杂，但是它处理速度快，占用内存少，可以用来处理海量的Excel数据。而SXSSFWorkbook是基于流模式的写，在xssf.streaming包下。
 
 
@@ -13,7 +13,7 @@ miniexcel正如其名，很简单，源码也简单，只是加了点设计模�
 
 miniexcel还引入了泛型和注解的使用，但目前我只是提供了一个注解，在写入数据时，可使用@ExcelCellTitle注解给bean的字段取一个标题名，还有标题的排序。默认情况下使用bean的字段名作为标题，标题不排序。
 
-###读，将excel文件中的记录读取到内存中List<Object\>
+### 读，将excel文件中的记录读取到内存中List<Object\>
 
 使用BigRowsExcelReader.getReader方法获取一个文件读取器，第一个参数是文件的绝对路径（包含后缀名），第二个参数是是否读取列标题。
 ```java
@@ -102,7 +102,7 @@ public class DefaultExcelReaderListener implements ExcelReaderListener {
 }
 ```
 
-####在web项目中使用
+#### 在web项目中使用
 1、在方法加上接收客户端上传的excel文件
 ```java
 @RequestParam("file") CommonsMultipartFile excelFile
@@ -129,7 +129,7 @@ try {
 }
 ```
 
-###写，将List<Object\>数据写入excel文件
+### 写，将List<Object\>数据写入excel文件
 1、首先创建一个bean，不支持Map类型哦。目前只支持简单类，不支持复杂类。什么是复杂类，就是Object中有非java基本数据类型的字段。目前支持的非基本数据类型（包括其Integer、Long等）只有Date。
 ```java
 /**
@@ -205,7 +205,7 @@ c、getNetOutputDataRealSize与getOutputDataWithSheetNumber很重要，也是需
     }
 ```
 
-####在web项目中使用
+#### 在web项目中使用
 ```java
 File file = writer.write(new ExcelWriterListener() {....})
 ```
@@ -243,7 +243,7 @@ File file = writer.write(new ExcelWriterListener() {....})
 
 目前实现的功能很简单，同时miniexcel也只是为了解决简单数据的导入导出而设计的，并不想搞得太复杂。
 
-###意见反馈
+### 意见反馈
 当前miniexcel被用在作者所在公司的项目中，如果遇到bug我会及时修复。也欢迎大家使用，欢迎大家参与到miniexcel开源项目来，发现问题给作者提个醒，或者拉一个分支修复，感谢！！！
 
 
