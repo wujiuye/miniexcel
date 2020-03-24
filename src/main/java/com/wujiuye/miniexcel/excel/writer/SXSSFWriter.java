@@ -1,10 +1,24 @@
+/**
+ * Copyright [2019-2020] [wujiuye]
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.wujiuye.miniexcel.excel.writer;
 
 import com.wujiuye.miniexcel.excel.base.ColumnsDesignator;
 import com.wujiuye.miniexcel.excel.base.ExcelMetaData;
 import com.wujiuye.miniexcel.excel.base.ReflectionUtils;
 import com.wujiuye.miniexcel.excel.utils.DateUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -138,8 +152,8 @@ public class SXSSFWriter extends AbstractExcelWriter {
      * @param rowIndex
      * @return
      */
-    private int writeData(Sheet sheet, List<ExcelMetaData> titles, List data, int rowIndex) {
-        if (CollectionUtils.isEmpty(data)) {
+    private int writeData(Sheet sheet, List<ExcelMetaData> titles, List<?> data, int rowIndex) {
+        if (data==null||data.isEmpty()) {
             throw new RuntimeException("data is null!");
         }
         for (int i = 0; i < data.size(); i++, rowIndex++) {
@@ -154,15 +168,15 @@ public class SXSSFWriter extends AbstractExcelWriter {
                         cell.setCellValue("");
                         continue;
                     }
-                    Class cellClass = cellDateVlaue.getClass();
-                    if (cellClass == Integer.class || cellClass == int.class) {
-                        cell.setCellValue(Integer.valueOf(cellDateVlaue.toString()));
-                    } else if (cellClass == Long.class || cellClass == long.class) {
-                        cell.setCellValue(Long.valueOf(cellDateVlaue.toString()));
-                    } else if (cellClass == Float.class || cellClass == float.class) {
-                        cell.setCellValue(Float.valueOf(cellDateVlaue.toString()));
-                    } else if (cellClass == Double.class || cellClass == double.class) {
-                        cell.setCellValue(Double.valueOf(cellDateVlaue.toString()));
+                    Class<?> cellClass = cellDateVlaue.getClass();
+                    if (cellClass == Integer.class) {
+                        cell.setCellValue(Integer.parseInt(cellDateVlaue.toString()));
+                    } else if (cellClass == Long.class) {
+                        cell.setCellValue(Long.parseLong(cellDateVlaue.toString()));
+                    } else if (cellClass == Float.class) {
+                        cell.setCellValue(Float.parseFloat(cellDateVlaue.toString()));
+                    } else if (cellClass == Double.class) {
+                        cell.setCellValue(Double.parseDouble(cellDateVlaue.toString()));
                     } else if (cellClass == Date.class) {
                         cell.setCellValue(DateUtils.parsingDatetime((Date) cellDateVlaue));
                     } else {
