@@ -22,7 +22,7 @@ import java.io.File;
  * @author wujiuye
  * @version 1.0 on 2019/4/13 {描述：}
  */
-public abstract class BigRowsExcelReader {
+public abstract class AbstractExcelReader {
 
     protected boolean readCellTitle;
     protected String filePath;
@@ -34,7 +34,7 @@ public abstract class BigRowsExcelReader {
      * @param readCellTitle 是否把表格的第一行作为标题
      * @return
      */
-    public static BigRowsExcelReader getReader(String filePath, boolean readCellTitle) {
+    public static AbstractExcelReader getReader(String filePath, boolean readCellTitle) {
         //根据文件后缀名不同(xls和xlsx)获得不同的Workbook实现类对象
         if (filePath.toUpperCase().endsWith(".XLS")) {
             return new XLS2003Reader(filePath,readCellTitle);
@@ -49,7 +49,7 @@ public abstract class BigRowsExcelReader {
      * @param filePath  excel文件的路径
      * @param readCellTitle 是否需要读取列标题，即把第一行的数据当初列标题
      */
-    BigRowsExcelReader(String filePath,boolean readCellTitle) {
+    AbstractExcelReader(String filePath, boolean readCellTitle) {
         File file = new File(filePath);
         if (!file.exists()) {
             throw new RuntimeException("file {" + filePath + "} no exists!!!");

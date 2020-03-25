@@ -22,14 +22,13 @@ import org.apache.poi.hssf.record.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * @author wujiuye
  * @version 1.0 on 2019/4/13 {描述：}
  */
-public final class XLS2003Reader extends BigRowsExcelReader {
+public final class XLS2003Reader extends AbstractExcelReader {
 
     XLS2003Reader(String filePath, boolean readCellTitle) {
         super(filePath, readCellTitle);
@@ -37,12 +36,9 @@ public final class XLS2003Reader extends BigRowsExcelReader {
 
     @Override
     public void doRead() {
-        FileInputStream is = null;
-        InputStream inputStream = null;
-        try {
-            is = new FileInputStream(filePath);
-            POIFSFileSystem poifs = new POIFSFileSystem(is);
-            inputStream = poifs.createDocumentInputStream("Workbook");
+        try (FileInputStream is = new FileInputStream(filePath);
+             POIFSFileSystem poifs = new POIFSFileSystem(is);
+             InputStream inputStream = poifs.createDocumentInputStream("Workbook")) {
             HSSFRequest req = new HSSFRequest();
             // 为HSSFRequest增加HSSFListener
             req.addListenerForAllRecords(new ExcelReadeListener());
@@ -50,23 +46,7 @@ public final class XLS2003Reader extends BigRowsExcelReader {
             // 处理inputstream
             factory.processEvents(req, inputStream);
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            // 关闭inputstream
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            throw new RuntimeException(e.getLocalizedMessage(), e);
         }
     }
 
@@ -83,7 +63,6 @@ public final class XLS2003Reader extends BigRowsExcelReader {
      */
     private class ExcelReadeListener implements HSSFListener {
 
-        private String currentSheetName;
         private SSTRecord sheetData;
 
         /**
@@ -111,19 +90,17 @@ public final class XLS2003Reader extends BigRowsExcelReader {
                 // 标记workbook或sheet开始，这里会进行判断
                 case BOFRecord.sid:
                     break;
-                //处理sheet,多个sheet会按sheet的顺序读取
+                // 处理sheet,多个sheet会按sheet的顺序读取
                 case BoundSheetRecord.sid:
                     BoundSheetRecord bsr = (BoundSheetRecord) record;
-                    String sheetName = bsr.getSheetname();
-                    this.currentSheetName = sheetName;
-                    XLS2003Reader.this.excelReaderListener.onReadSheetStart(this.currentSheetName);
+                    String currentSheetName = bsr.getSheetname();
+                    XLS2003Reader.this.excelReaderListener.onReadSheetStart(currentSheetName);
                     break;
                 // 包含一个sheet的所有文本单元格
                 case SSTRecord.sid:
-                    SSTRecord sstrec = (SSTRecord) record;
-                    this.sheetData = sstrec;
+                    this.sheetData = (SSTRecord) record;
                     break;
-                //文本单元格处理
+                // 文本单元格处理
                 case LabelSSTRecord.sid:
                     LabelSSTRecord lrec = (LabelSSTRecord) record;
                     if (lrec.getRow() == 0 && XLS2003Reader.this.readCellTitle) {
@@ -135,13 +112,14 @@ public final class XLS2003Reader extends BigRowsExcelReader {
                                 lrec.getColumn());
                     }
                     break;
-                //数值单元格和日期单元格处理
+                // 数值单元格和日期单元格处理
                 case NumberRecord.sid:
                     NumberRecord numrec = (NumberRecord) record;
                     XLS2003Reader.this.excelReaderListener.onReadRow(numrec.getValue(), numrec.getRow(), numrec.getColumn());
                     break;
                 case EOFRecord.sid:
                     break;
+                default:
             }
         }
     }

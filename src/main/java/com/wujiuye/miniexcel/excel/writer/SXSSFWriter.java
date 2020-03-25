@@ -15,10 +15,10 @@
  */
 package com.wujiuye.miniexcel.excel.writer;
 
-import com.wujiuye.miniexcel.excel.base.ColumnsDesignator;
-import com.wujiuye.miniexcel.excel.base.ExcelMetaData;
-import com.wujiuye.miniexcel.excel.base.ReflectionUtils;
-import com.wujiuye.miniexcel.excel.utils.DateUtils;
+import com.wujiuye.miniexcel.excel.annotation.ColumnsDesignator;
+import com.wujiuye.miniexcel.excel.annotation.ExcelMetaData;
+import com.wujiuye.miniexcel.excel.annotation.CellAnnotationParser;
+import com.wujiuye.miniexcel.excel.util.DateUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public class SXSSFWriter extends AbstractExcelWriter {
 
-    private ExcelWriterListener writerListener;
+    private ExcelWriterListener<?> writerListener;
     private ColumnsDesignator columnsDesignator;
 
     SXSSFWriter(String filePath, ExportFormatType format) {
@@ -44,7 +44,7 @@ public class SXSSFWriter extends AbstractExcelWriter {
     }
 
     @Override
-    protected File doWrite(ExcelWriterListener writerListener, ColumnsDesignator columnsDesignator) {
+    protected File doWrite(ExcelWriterListener<?> writerListener, ColumnsDesignator columnsDesignator) {
         this.writerListener = writerListener;
         this.columnsDesignator = columnsDesignator;
         if (writerListener == null) {
@@ -61,7 +61,7 @@ public class SXSSFWriter extends AbstractExcelWriter {
 
     private void realDoWrite() throws Exception {
         boolean needWriter = this.writerListener.autoGenerateTitle();
-        Class targetClass = this.writerListener.getDataObjectClass();
+        Class<?> targetClass = this.writerListener.getDataObjectClass();
         if (targetClass == null) {
             throw new RuntimeException("target class not null!!!");
         }
@@ -80,7 +80,7 @@ public class SXSSFWriter extends AbstractExcelWriter {
             rowIndex += writeTitle(sh, metaDatas);
         }
         while ((currentPageSize = this.writerListener.getNetOutputDataRealSize(sheetNumber)) != 0) {
-            List data = this.writerListener.getOutputDataWithSheetNumber(sheetNumber, nextLimit, nextLimit + currentPageSize);
+            List<?> data = this.writerListener.getOutputDataWithSheetNumber(sheetNumber, nextLimit, nextLimit + currentPageSize);
             rowIndex = writeData(sh, metaDatas, data, rowIndex);
             nextLimit += currentPageSize;
 
@@ -112,17 +112,18 @@ public class SXSSFWriter extends AbstractExcelWriter {
      * @param targetClass
      * @return
      */
-    private List<ExcelMetaData> analysisColumnsMetaDateByClass(Class targetClass) {
-        List<ExcelMetaData> metaDatas = ReflectionUtils.getFieldWithTargetClass(targetClass);
+    private List<ExcelMetaData> analysisColumnsMetaDateByClass(Class<?> targetClass) {
+        List<ExcelMetaData> metaDatas = CellAnnotationParser.getFieldWithTargetClass(targetClass);
         // 对列做排序操作
-        metaDatas = ReflectionUtils.sortField(metaDatas);
+        metaDatas = CellAnnotationParser.sortField(metaDatas);
         if (columnsDesignator != null) {
             // 过滤不需要的字段
             metaDatas = metaDatas.stream()
                     .filter(metaData -> !columnsDesignator.isIgnore(metaData.getFieldName()))
                     .collect(Collectors.toList());
             // 重命名列标题名称（根据字段名重新赋予导出的文件的列标题名）
-            metaDatas.forEach(metaData -> metaData.setCellName(columnsDesignator.renameColumn(metaData.getFieldName())));
+            metaDatas.forEach(metaData -> metaData.setCellName(
+                    columnsDesignator.renameColumn(metaData.getFieldName(), metaData.getCellName())));
         }
         return metaDatas;
     }
@@ -153,7 +154,7 @@ public class SXSSFWriter extends AbstractExcelWriter {
      * @return
      */
     private int writeData(Sheet sheet, List<ExcelMetaData> titles, List<?> data, int rowIndex) {
-        if (data==null||data.isEmpty()) {
+        if (data == null || data.isEmpty()) {
             throw new RuntimeException("data is null!");
         }
         for (int i = 0; i < data.size(); i++, rowIndex++) {

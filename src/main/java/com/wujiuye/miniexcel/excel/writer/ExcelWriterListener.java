@@ -35,7 +35,7 @@ public interface ExcelWriterListener<T> {
      *
      * @return
      */
-    Class getDataObjectClass();
+    Class<?> getDataObjectClass();
 
     /**
      * 是否需要自动生成标题输出，使用反射获取范型T的字段名作为标题

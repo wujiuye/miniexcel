@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wujiuye.miniexcel.excel.utils;
+package com.wujiuye.miniexcel.excel.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

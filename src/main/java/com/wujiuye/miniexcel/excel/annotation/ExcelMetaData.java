@@ -13,35 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wujiuye.miniexcel.excel.base;
+package com.wujiuye.miniexcel.excel.annotation;
 
 import java.lang.reflect.Field;
 
 /**
+ * 列与字段的映射，列描述元数据
+ *
  * @author wujiuye
  * @version 1.0 on 2019/4/30 {描述：}
  */
 public class ExcelMetaData {
 
-    private Class<?> targetClass;
-    private String fieldName;
+    /**
+     * 字段
+     */
     private Field field;
+    /**
+     * 列名
+     */
     private String cellName;
 
-    public Class<?> getTargetClass() {
-        return targetClass;
-    }
-
-    public void setTargetClass(Class<?> targetClass) {
-        this.targetClass = targetClass;
-    }
-
     public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
+        return field.getName();
     }
 
     public Field getField() {
@@ -59,4 +53,5 @@ public class ExcelMetaData {
     public void setCellName(String cellName) {
         this.cellName = cellName;
     }
+
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wujiuye.miniexcel.excel.base;
+package com.wujiuye.miniexcel.excel.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,15 +33,24 @@ public @interface ExcelCellTitle {
 
     /**
      * -1为不参与排序
+     * 用于列的排序
      *
      * @return
      */
     int cellNumber() default -1;
 
     /**
-     * 为null时，取属性的字段名
+     * 列名，为null时，取属性的字段名
      *
      * @return
      */
-    String alias();
+    String alias() default "";
+
+    /**
+     * 是否忽略这列（这个字段）
+     *
+     * @return
+     */
+    boolean ignore() default false;
+
 }

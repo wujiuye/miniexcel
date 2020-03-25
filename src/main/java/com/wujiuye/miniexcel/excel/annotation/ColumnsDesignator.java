@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wujiuye.miniexcel.excel.base;
+package com.wujiuye.miniexcel.excel.annotation;
 
 /**
+ * 提供扩展功能，一般使用注解实现，除非有特殊需求
+ * 1、自定义忽略哪些字段
+ * 2、自定义重命名哪些字段
+ *
  * @author wujiuye
  * @version 1.0 on 2019/10/10 {描述：
  * 列指示器
@@ -25,6 +29,7 @@ public interface ColumnsDesignator {
 
     /**
      * 是否忽略该列
+     * 一般使用注解，除非有特殊需求
      *
      * @param column data的数据类型的字段名
      * @return
@@ -33,10 +38,12 @@ public interface ColumnsDesignator {
 
     /**
      * 是否需要重命名
+     * 一般使用注解，除非有特殊需求
      *
-     * @param column data的数据类型的字段名
+     * @param fieldName         data的数据类型的字段名
+     * @param currentColumnName 当前使用的列名，也就是从注解上面获取的，如果注解没有配置，则等于字段名
      * @return 不需要重命名则直接返回参数column，需要重命名则返回重命名后的列名（excel文件的标题名称）
      */
-    String renameColumn(String column);
+    String renameColumn(String fieldName, String currentColumnName);
 
 }

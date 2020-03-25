@@ -16,7 +16,6 @@
 package com.wujiuye.miniexcel.excel.reader;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.openxml4j.opc.PackageAccess;
@@ -41,7 +40,7 @@ import java.util.regex.Pattern;
  * @author wujiuye
  * @version 1.0 on 2019/4/13 {描述：}
  */
-public final class XLSX2007Reader extends BigRowsExcelReader {
+public final class XLSX2007Reader extends AbstractExcelReader {
 
     XLSX2007Reader(String filePath, boolean readCellTitle) {
         super(filePath, readCellTitle);
@@ -102,6 +101,7 @@ public final class XLSX2007Reader extends BigRowsExcelReader {
         // 数字标志
         private boolean numberFlag;
         private boolean isTElement;
+        private Pattern pattern = Pattern.compile("^A[0-9]+$");
 
 
         private SheetHandler(SharedStringsTable sst) {
@@ -128,7 +128,7 @@ public final class XLSX2007Reader extends BigRowsExcelReader {
                 thisColumnIndex = nameToColumn(index.substring(0, firstDigit));
 
                 // 判断是否是新的一行
-                if (Pattern.compile("^A[0-9]+$").matcher(index).find()) {
+                if (pattern.matcher(index).find()) {
                     currentRow++;
                 }
                 String cellType = attributes.getValue("t");

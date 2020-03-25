@@ -36,14 +36,20 @@ public class DefaultExcelReaderListener implements ExcelReaderListener {
     private int currentRow = -1;
     private Map<String, Object> currentRowData = new HashMap<>();
 
-    private boolean ydCell = false;//是否约定只获取某些列
+    /**
+     * 是否约定只获取某些列
+     */
+    private boolean ydCell = false;
+    /**
+     * 读取哪些列
+     */
     private List<String> readCells;
 
-    public DefaultExcelReaderListener() {
-
-    }
-
-    //是否只获取某些列的值
+    /**
+     * 是否只获取某些列的值
+     *
+     * @param cellName
+     */
     public DefaultExcelReaderListener(String... cellName) {
         if (cellName != null && cellName.length > 0) {
             ydCell = true;

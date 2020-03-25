@@ -16,7 +16,7 @@
 package com.wujiuye.miniexcel.excel.writer;
 
 
-import com.wujiuye.miniexcel.excel.base.ColumnsDesignator;
+import com.wujiuye.miniexcel.excel.annotation.ColumnsDesignator;
 
 import java.io.File;
 
@@ -26,7 +26,9 @@ import java.io.File;
  */
 public abstract class AbstractExcelWriter {
 
-    //导出格式
+    /**
+     * 导出格式
+     */
     public enum ExportFormatType {
         CSV(".csv"),
         XLS(".xls"),
@@ -66,17 +68,15 @@ public abstract class AbstractExcelWriter {
     private final String DEFAULT_SHEETNAME_FROMAT = "sheet_{sn}";
 
     public static AbstractExcelWriter createExcelWriter(String filePath, ExportFormatType format) {
-        AbstractExcelWriter excelWriter = null;
+        AbstractExcelWriter excelWriter;
         switch (format) {
-            case CSV:
-                break;
             case XLS:
             case XLSX:
                 excelWriter = new SXSSFWriter(filePath, format);
                 break;
-        }
-        if (excelWriter == null) {
-            throw new FormatException("不支持的格式！！！");
+            case CSV:
+            default:
+                throw new FormatException("不支持的格式！！！");
         }
         return excelWriter;
     }
@@ -102,7 +102,7 @@ public abstract class AbstractExcelWriter {
         return this;
     }
 
-    public File write(ExcelWriterListener writerListener) {
+    public File write(ExcelWriterListener<?> writerListener) {
         return this.doWrite(writerListener, null);
     }
 
@@ -113,12 +113,12 @@ public abstract class AbstractExcelWriter {
      * @param columnsDesignator 导出列指示器
      * @return
      */
-    public File write(ExcelWriterListener writerListener, ColumnsDesignator columnsDesignator) {
+    public File write(ExcelWriterListener<?> writerListener, ColumnsDesignator columnsDesignator) {
         return this.doWrite(writerListener, columnsDesignator);
     }
 
 
-    protected abstract File doWrite(ExcelWriterListener writerListener, ColumnsDesignator columnsDesignator);
+    protected abstract File doWrite(ExcelWriterListener<?> writerListener, ColumnsDesignator columnsDesignator);
 
 
 }

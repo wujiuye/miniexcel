@@ -13,30 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wujiuye.miniexcel.excel.base;
+package com.wujiuye.miniexcel.excel.annotation;
 
 
-import com.wujiuye.miniexcel.excel.utils.StringUtils;
+import com.wujiuye.miniexcel.excel.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 /**
+ * 注解解析器
+ *
  * @author wujiuye
  * @version 1.0 on 2019/4/30 {描述：}
  */
-public class ReflectionUtils {
+public class CellAnnotationParser {
 
     public static List<ExcelMetaData> getFieldWithTargetClass(Class<?> targetClass) {
         List<ExcelMetaData> excelMetaData = new ArrayList<>();
         Field[] fields = targetClass.getDeclaredFields();
         if (fields.length > 0) {
             for (Field field : fields) {
+                ExcelCellTitle cellTitle = field.getAnnotation(ExcelCellTitle.class);
+                if (cellTitle != null && cellTitle.ignore()) {
+                    continue;
+                }
                 ExcelMetaData metaData = new ExcelMetaData();
                 metaData.setField(field);
-                metaData.setFieldName(field.getName());
-                metaData.setTargetClass(targetClass);
-                ExcelCellTitle cellTitle = metaData.getField().getAnnotation(ExcelCellTitle.class);
                 if (cellTitle == null || StringUtils.isEmpty(cellTitle.alias())) {
                     metaData.setCellName(field.getName());
                 } else {
@@ -75,7 +78,7 @@ public class ReflectionUtils {
         // 处理需要排序的列
         if (sortMap.size() > 0) {
             List<Map.Entry<Integer, List<ExcelMetaData>>> list = new ArrayList<>(sortMap.entrySet());
-            list.sort((o1, o2) -> o1.getKey() - o2.getKey());
+            list.sort(Comparator.comparingInt(Map.Entry::getKey));
             for (Map.Entry<Integer, List<ExcelMetaData>> mapping : list) {
                 if (mapping.getValue().size() > 0) {
                     for (ExcelMetaData emd : mapping.getValue()) {
@@ -91,4 +94,5 @@ public class ReflectionUtils {
         data.addAll(Arrays.asList(sortData));
         return data;
     }
+
 }
