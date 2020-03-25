@@ -188,13 +188,13 @@ public class ExcelTestBean {
 
 2、将List数据写入excel文件
 
-Writer的几个方法
-a、.setSheetSize(1_000) 设置每个sheet的大小为1000行，当写满1000行时，自动创建一个新的sheet；
+Writer的几个方法\
+a、.setSheetSize(1_000) 设置每个sheet的大小为1000行，当写满1000行时，自动创建一个新的sheet；\
 b、.setSheetNameFromat("export_{sn}")即给sheet设置命名规则，其中{sn}是必须的，会被替换为序号。
 
-ExcelWriterListener的几个方法
-a、getDataObjectClass获取记录的真实类型
-b、autoGenerateTitle是否需要在创建sheet时自动生成标题
+ExcelWriterListener的几个方法\
+a、getDataObjectClass获取记录的真实类型\
+b、autoGenerateTitle是否需要在创建sheet时自动生成标题\
 c、getNetOutputDataRealSize与getOutputDataWithSheetNumber很重要，也是需要配合使用的，前者是表示接下来要写入的数据的大小，后者则需要返回接下来实际需要写入的数据。如果getNetOutputDataRealSize返回0则结束。limitStart与limitEnd是借鉴了分页查询的思想，实现分页写入，这样可以边查询边写入，避免一次将所有数据查询出来占用大量的内存。
 
 ```java
