@@ -401,24 +401,18 @@ AbstractExcelWriter writer = AbstractExcelWriter.getWriter(new FileOutputStream(
 AnnotationExcelReaderListener使用泛型读取，无需再对导出的数据做类型转换
 
 ```java
- /**
-     * 换货
-     */
+
     @Getter
     @Setter
     @ToString(callSuper = true)
     @EqualsAndHashCode(callSuper = true)
-    public  class PortionAndGoodsChange extends Portion {
-        /**
-         * 换出商品ID
-         */
-        @ExcelCellTitle(alias = "换出商品ID", cellNumber = 5)
-        private Long exchangeLeId;
-        /**
-         * 换出商品货号
-         */
-        @ExcelCellTitle(alias = "换出商品子货号", cellNumber = 6)
-        private Long exchangeLeCode;
+    public  class GoodsEntity extends Portion {
+        
+        @ExcelCellTitle(alias = "商品ID", cellNumber = 5)
+        private Long goodsId;
+       
+        @ExcelCellTitle(alias = "商品货号", cellNumber = 6)
+        private Long goodsCode;
     }
 ```
 
@@ -426,10 +420,9 @@ AnnotationExcelReaderListener使用泛型读取，无需再对导出的数据做
 ```java
 public class TestMain{
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("/Users/wjy/Downloads/导入文件.xlsx");
+        File file = new File("/Users/wjy/Downloads/文件.xlsx");
         AbstractExcelReader reader = AbstractExcelReader.getReader(new FileInputStream(file), ExcelFileType.XLSX, true);
-        AnnotationExcelReaderListener<PortionAndGoodsChange> listener
-                = new AnnotationExcelReaderListener<>(ExchangeExcelForm.PortionAndGoodsChange.class);
+        AnnotationExcelReaderListener<GoodsEntity> listener = new AnnotationExcelReaderListener<>(GoodsEntity.class);
         reader.read(listener);
         listener.getRecords().forEach(System.out::println);
     }
