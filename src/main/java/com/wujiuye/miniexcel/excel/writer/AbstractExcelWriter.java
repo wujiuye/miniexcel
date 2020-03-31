@@ -16,9 +16,11 @@
 package com.wujiuye.miniexcel.excel.writer;
 
 
+import com.wujiuye.miniexcel.excel.ExcelFileType;
 import com.wujiuye.miniexcel.excel.annotation.ColumnsDesignator;
 
 import java.io.File;
+import java.io.OutputStream;
 
 /**
  * @author wujiuye
@@ -27,28 +29,11 @@ import java.io.File;
 public abstract class AbstractExcelWriter {
 
     /**
-     * 导出格式
-     */
-    public enum ExportFormatType {
-        CSV(".csv"),
-        XLS(".xls"),
-        XLSX(".xlsx");
-        String fromat;
-
-        ExportFormatType(String fromat) {
-            this.fromat = fromat;
-        }
-
-        public String getFromat() {
-            return this.fromat;
-        }
-    }
-
-    /**
      * 文件刷出的路径
      */
     protected String filePath;
-    protected ExportFormatType format;
+    protected OutputStream outputStream;
+    protected ExcelFileType format;
     /**
      * 刷盘记录的大小，即一次导出的记录数，应尽量的少，避免占用太多内存
      */
@@ -67,7 +52,32 @@ public abstract class AbstractExcelWriter {
      */
     private final String DEFAULT_SHEETNAME_FROMAT = "sheet_{sn}";
 
-    public static AbstractExcelWriter createExcelWriter(String filePath, ExportFormatType format) {
+    /**
+     * 根据输出流和输出的文件格式创建写入器
+     *
+     * @param ot     输出流，由传入者自己关闭流
+     * @param format 文件格式
+     * @return
+     */
+    public static AbstractExcelWriter createExcelWriter(OutputStream ot, ExcelFileType format) {
+        switch (format) {
+            case XLS:
+            case XLSX:
+                return new SXSSFWriter(ot, format);
+            case CSV:
+            default:
+                throw new FormatException("不支持的格式！！！");
+        }
+    }
+
+    /**
+     * 根据文件路径和文件格式创建写入器，将数据写入指定文件
+     *
+     * @param filePath 文件绝对路径，不含文件扩展名
+     * @param format   写出的文件格式
+     * @return
+     */
+    public static AbstractExcelWriter createExcelWriter(String filePath, ExcelFileType format) {
         AbstractExcelWriter excelWriter;
         switch (format) {
             case XLS:
@@ -81,10 +91,15 @@ public abstract class AbstractExcelWriter {
         return excelWriter;
     }
 
-    AbstractExcelWriter(String filePath, ExportFormatType format) {
+    AbstractExcelWriter(String filePath, ExcelFileType format) {
         this.filePath = filePath;
         this.format = format;
         this.sheetNameFromat = DEFAULT_SHEETNAME_FROMAT;
+    }
+
+    AbstractExcelWriter(OutputStream ot, ExcelFileType format) {
+        this.outputStream = ot;
+        this.format = format;
     }
 
     public AbstractExcelWriter setSheetSize(int sheetSize) {
@@ -102,6 +117,12 @@ public abstract class AbstractExcelWriter {
         return this;
     }
 
+    /**
+     * 开始写入
+     *
+     * @param writerListener 自定义写入监听器，怎么写入你决定
+     * @return
+     */
     public File write(ExcelWriterListener<?> writerListener) {
         return this.doWrite(writerListener, null);
     }

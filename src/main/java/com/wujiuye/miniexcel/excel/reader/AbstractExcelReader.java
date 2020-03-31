@@ -15,7 +15,10 @@
  */
 package com.wujiuye.miniexcel.excel.reader;
 
+import com.wujiuye.miniexcel.excel.ExcelFileType;
+
 import java.io.File;
+import java.io.InputStream;
 
 
 /**
@@ -26,10 +29,32 @@ public abstract class AbstractExcelReader {
 
     protected boolean readCellTitle;
     protected String filePath;
+    protected InputStream inputStream;
     protected ExcelReaderListener excelReaderListener;
 
     /**
-     * 创建一个reader
+     * 根据文件输入流和文件类型创建一个读取器
+     *
+     * @param in            excel文件输入流
+     * @param type          文件后缀类型
+     * @param readCellTitle 是否读取列标题
+     * @return
+     */
+    public static AbstractExcelReader getReader(InputStream in, ExcelFileType type, boolean readCellTitle) {
+        switch (type) {
+            case XLS:
+                return new XLS2003Reader(in, readCellTitle);
+            case XLSX:
+                return new XLSX2007Reader(in, readCellTitle);
+            case CSV:
+            default:
+                throw new RuntimeException("不支持该文件格式！！！");
+        }
+    }
+
+    /**
+     * 根据文件路径创建一个reader
+     *
      * @param filePath      文件绝对路径（含后缀名）
      * @param readCellTitle 是否把表格的第一行作为标题
      * @return
@@ -37,16 +62,17 @@ public abstract class AbstractExcelReader {
     public static AbstractExcelReader getReader(String filePath, boolean readCellTitle) {
         //根据文件后缀名不同(xls和xlsx)获得不同的Workbook实现类对象
         if (filePath.toUpperCase().endsWith(".XLS")) {
-            return new XLS2003Reader(filePath,readCellTitle);
+            return new XLS2003Reader(filePath, readCellTitle);
         } else if (filePath.toUpperCase().endsWith(".XLSX")) {
-            return new XLSX2007Reader(filePath,readCellTitle);
+            return new XLSX2007Reader(filePath, readCellTitle);
         }
         throw new RuntimeException("不支持该文件格式！！！");
     }
 
     /**
      * 构造方法
-     * @param filePath  excel文件的路径
+     *
+     * @param filePath      excel文件的路径
      * @param readCellTitle 是否需要读取列标题，即把第一行的数据当初列标题
      */
     AbstractExcelReader(String filePath, boolean readCellTitle) {
@@ -58,6 +84,22 @@ public abstract class AbstractExcelReader {
         this.filePath = filePath;
     }
 
+    /**
+     * 构造方法
+     *
+     * @param in            excel文件的输入流
+     * @param readCellTitle 是否需要读取列标题，即把第一行的数据当初列标题
+     */
+    AbstractExcelReader(InputStream in, boolean readCellTitle) {
+        this.readCellTitle = readCellTitle;
+        this.inputStream = in;
+    }
+
+    /**
+     * 开始读取文件内容
+     *
+     * @param readerListener 读取监听器，负责怎么读取数据
+     */
     public void read(ExcelReaderListener readerListener) {
         if (readerListener == null) {
             throw new RuntimeException("监控器不能为null！！！");

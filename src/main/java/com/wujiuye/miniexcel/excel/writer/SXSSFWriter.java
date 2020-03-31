@@ -15,6 +15,7 @@
  */
 package com.wujiuye.miniexcel.excel.writer;
 
+import com.wujiuye.miniexcel.excel.ExcelFileType;
 import com.wujiuye.miniexcel.excel.annotation.ColumnsDesignator;
 import com.wujiuye.miniexcel.excel.annotation.ExcelMetaData;
 import com.wujiuye.miniexcel.excel.annotation.CellAnnotationParser;
@@ -26,6 +27,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,13 +36,17 @@ import java.util.stream.Collectors;
  * @author wujiuye
  * @version 1.0 on 2019/4/30 {描述：}
  */
-public class SXSSFWriter extends AbstractExcelWriter {
+class SXSSFWriter extends AbstractExcelWriter {
 
     private ExcelWriterListener<?> writerListener;
     private ColumnsDesignator columnsDesignator;
 
-    SXSSFWriter(String filePath, ExportFormatType format) {
+    SXSSFWriter(String filePath, ExcelFileType format) {
         super(filePath, format);
+    }
+
+    SXSSFWriter(OutputStream ot, ExcelFileType format) {
+        super(ot, format);
     }
 
     @Override
@@ -96,13 +102,26 @@ public class SXSSFWriter extends AbstractExcelWriter {
             }
         }
 
-        //输出到目标文件
-        try (FileOutputStream fileOut = new FileOutputStream(this.filePath + this.format.fromat)) {
-            wb.write(fileOut);
-        } catch (Exception e) {
-            this.writerListener.onError(e);
-        } finally {
-            wb.dispose();
+        // 输出到目标文件
+        if (outputStream != null) {
+            try {
+                // 由外部负责关闭流
+                wb.write(outputStream);
+            } catch (Exception e) {
+                this.writerListener.onError(e);
+            } finally {
+                // 释放磁盘上备份此工作簿的临时文件
+                wb.dispose();
+            }
+        } else {
+            try (FileOutputStream fileOut = new FileOutputStream(this.filePath + this.format.getFromat())) {
+                wb.write(fileOut);
+            } catch (Exception e) {
+                this.writerListener.onError(e);
+            } finally {
+                // 释放磁盘上备份此工作簿的临时文件
+                wb.dispose();
+            }
         }
     }
 

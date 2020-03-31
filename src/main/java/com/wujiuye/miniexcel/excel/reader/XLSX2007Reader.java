@@ -32,25 +32,31 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
  * @author wujiuye
  * @version 1.0 on 2019/4/13 {描述：}
  */
-public final class XLSX2007Reader extends AbstractExcelReader {
+final class XLSX2007Reader extends AbstractExcelReader {
 
     XLSX2007Reader(String filePath, boolean readCellTitle) {
         super(filePath, readCellTitle);
+    }
+
+    XLSX2007Reader(InputStream inputStream, boolean readCellTitle) {
+        super(inputStream, readCellTitle);
     }
 
     @Override
     protected void doRead() {
         OPCPackage pkg = null;
         try {
-            pkg = OPCPackage.open(filePath, PackageAccess.READ);
+            if (inputStream != null) {
+                pkg = OPCPackage.open(inputStream);
+            } else {
+                pkg = OPCPackage.open(filePath, PackageAccess.READ);
+            }
             XSSFReader reader = new XSSFReader(pkg);
             XMLReader parser = XMLReaderFactory.createXMLReader();
             // 处理公共属性：Sheet名，Sheet合并单元格
@@ -116,7 +122,7 @@ public final class XLSX2007Reader extends AbstractExcelReader {
          */
         @Override
         public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
-            if (name.equals("c")) {
+            if ("c".equals(name)) {
                 index = attributes.getValue("r");
                 int firstDigit = -1;
                 for (int c = 0; c < index.length(); ++c) {
@@ -132,7 +138,7 @@ public final class XLSX2007Reader extends AbstractExcelReader {
                     currentRow++;
                 }
                 String cellType = attributes.getValue("t");
-                if (cellType != null && cellType.equals("s")) {
+                if ("s".equals(cellType)) {
                     nextIsString = true;
                 } else {
                     nextIsString = false;
@@ -189,26 +195,30 @@ public final class XLSX2007Reader extends AbstractExcelReader {
                 isTElement = false;
             } else if ("v".equals(name)) {
                 // v => 单元格的值，如果单元格是字符串则v标签的值为该字符串在SST中的索引
-                String value = lastContents.trim();
+                Object value = lastContents.trim();
                 // 日期格式处理
                 if (dateFlag) {
                     try {
-                        Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        value = dateFormat.format(date);
+                        value = HSSFDateUtil.getJavaDate(Double.parseDouble(lastContents.trim()));
                     } catch (NumberFormatException e) {
+                        value = null;
                     }
                 }
                 // 数字类型处理
                 if (numberFlag) {
                     try {
-                        BigDecimal bd = new BigDecimal(value);
-                        value = bd.setScale(3, BigDecimal.ROUND_UP).toString();
+                        BigDecimal bd = new BigDecimal(lastContents.trim());
+                        if (lastContents.trim().contains(".")) {
+                            value = bd.intValue();
+                        } else {
+                            value = bd.setScale(4, BigDecimal.ROUND_UP).doubleValue();
+                        }
                     } catch (Exception e) {
+                        value = null;
                     }
                 }
                 if (XLSX2007Reader.this.readCellTitle && currentRow == 1) {
-                    XLSX2007Reader.this.excelReaderListener.onReadSheetTitle(thisColumnIndex, value);
+                    XLSX2007Reader.this.excelReaderListener.onReadSheetTitle(thisColumnIndex, lastContents.trim());
                 } else {
                     XLSX2007Reader.this.excelReaderListener.onReadRow(value, XLSX2007Reader.this.readCellTitle ? currentRow - 1 : currentRow, thisColumnIndex);
                 }

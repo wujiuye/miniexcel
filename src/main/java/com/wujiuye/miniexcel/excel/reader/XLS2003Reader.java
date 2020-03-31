@@ -28,25 +28,44 @@ import java.io.InputStream;
  * @author wujiuye
  * @version 1.0 on 2019/4/13 {描述：}
  */
-public final class XLS2003Reader extends AbstractExcelReader {
+final class XLS2003Reader extends AbstractExcelReader {
 
     XLS2003Reader(String filePath, boolean readCellTitle) {
         super(filePath, readCellTitle);
     }
 
+    XLS2003Reader(InputStream inputStream, boolean readCellTitle) {
+        super(inputStream, readCellTitle);
+    }
+
     @Override
     public void doRead() {
-        try (FileInputStream is = new FileInputStream(filePath);
-             POIFSFileSystem poifs = new POIFSFileSystem(is);
-             InputStream inputStream = poifs.createDocumentInputStream("Workbook")) {
-            HSSFRequest req = new HSSFRequest();
-            // 为HSSFRequest增加HSSFListener
-            req.addListenerForAllRecords(new ExcelReadeListener());
-            HSSFEventFactory factory = new HSSFEventFactory();
-            // 处理inputstream
-            factory.processEvents(req, inputStream);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getLocalizedMessage(), e);
+        if (inputStream != null) {
+            // 由外部负责关闭inputStream流
+            try (POIFSFileSystem poifs = new POIFSFileSystem(inputStream);
+                 InputStream inputStream = poifs.createDocumentInputStream("Workbook")) {
+                HSSFRequest req = new HSSFRequest();
+                // 为HSSFRequest增加HSSFListener
+                req.addListenerForAllRecords(new ExcelReadeListener());
+                HSSFEventFactory factory = new HSSFEventFactory();
+                // 处理inputstream
+                factory.processEvents(req, inputStream);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getLocalizedMessage(), e);
+            }
+        } else {
+            try (FileInputStream is = new FileInputStream(filePath);
+                 POIFSFileSystem poifs = new POIFSFileSystem(is);
+                 InputStream inputStream = poifs.createDocumentInputStream("Workbook")) {
+                HSSFRequest req = new HSSFRequest();
+                // 为HSSFRequest增加HSSFListener
+                req.addListenerForAllRecords(new ExcelReadeListener());
+                HSSFEventFactory factory = new HSSFEventFactory();
+                // 处理inputstream
+                factory.processEvents(req, inputStream);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getLocalizedMessage(), e);
+            }
         }
     }
 

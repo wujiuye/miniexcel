@@ -29,9 +29,33 @@ import java.util.*;
  */
 public class CellAnnotationParser {
 
+    /**
+     * 获取包括父类的字段
+     *
+     * @param targetClass 目标类型
+     * @return
+     */
+    private static Field[] getFields(Class<?> targetClass) {
+        Field[] result = null;
+        for (; targetClass != Object.class; targetClass = targetClass.getSuperclass()) {
+            if (result == null) {
+                result = targetClass.getDeclaredFields();
+            } else {
+                Field[] child = targetClass.getDeclaredFields();
+                if (child.length > 0) {
+                    Field[] newArray = new Field[result.length + child.length];
+                    System.arraycopy(result, 0, newArray, 0, result.length);
+                    System.arraycopy(child, 0, newArray, result.length, child.length);
+                    result = newArray;
+                }
+            }
+        }
+        return result;
+    }
+
     public static List<ExcelMetaData> getFieldWithTargetClass(Class<?> targetClass) {
         List<ExcelMetaData> excelMetaData = new ArrayList<>();
-        Field[] fields = targetClass.getDeclaredFields();
+        Field[] fields = getFields(targetClass);
         if (fields.length > 0) {
             for (Field field : fields) {
                 ExcelCellTitle cellTitle = field.getAnnotation(ExcelCellTitle.class);

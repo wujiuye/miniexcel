@@ -21,6 +21,12 @@ package com.wujiuye.miniexcel.excel.util;
  */
 public class StringUtils {
 
+    /**
+     * 判断字符串是否为空
+     *
+     * @param str 字符串
+     * @return true: 空串，false: 非空串
+     */
     public static boolean isEmpty(String str) {
         return str == null || str.trim().length() == 0;
     }

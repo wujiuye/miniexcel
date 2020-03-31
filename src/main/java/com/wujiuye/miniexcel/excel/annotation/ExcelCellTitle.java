@@ -23,6 +23,8 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * 适用于读和写
+ *
  * @author wujiuye
  * @version 1.0 on 2019/4/30 {描述：}
  */

@@ -377,3 +377,61 @@ public class TestMain{
 * 3、调整代码结构
 * 4、把提供默认的默认读监听器`DefaultExcelWriteListener`改为`DefaultExcelWriteListenerAdapter`，默认抛出异常。
 
+#### 版本1.3.18-RELEASE
+
+日期：`2020-03-31`\
+版本号：`1.3.18-RELEASE`\
+更新说明：
+* 1、读取器和写入器支持根据输入流和输出流创建
+
+创建读取器
+```text
+AbstractExcelReader reader = AbstractExcelReader.getReader(new FileInputStream(file), ExcelFileType.XLSX, true);
+```
+
+创建写入器
+```text
+AbstractExcelWriter writer = AbstractExcelWriter.getWriter(new FileOutputStream(file),ExcelFileType.XLSX);
+```
+
+* 2、导出数据的数据类型Class，如Student，能够获取到父类的字段
+
+* 3、提供注解读取监听器AnnotationExcelReaderListener
+
+AnnotationExcelReaderListener使用泛型读取，无需再对导出的数据做类型转换
+
+```java
+ /**
+     * 换货
+     */
+    @Getter
+    @Setter
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    public  class PortionAndGoodsChange extends Portion {
+        /**
+         * 换出商品ID
+         */
+        @ExcelCellTitle(alias = "换出商品ID", cellNumber = 5)
+        private Long exchangeLeId;
+        /**
+         * 换出商品货号
+         */
+        @ExcelCellTitle(alias = "换出商品子货号", cellNumber = 6)
+        private Long exchangeLeCode;
+    }
+```
+
+使用AnnotationExcelReaderListener读取监听器读取数据
+```java
+public class TestMain{
+    public static void main(String[] args) throws FileNotFoundException {
+        File file = new File("/Users/wjy/Downloads/导入文件.xlsx");
+        AbstractExcelReader reader = AbstractExcelReader.getReader(new FileInputStream(file), ExcelFileType.XLSX, true);
+        AnnotationExcelReaderListener<PortionAndGoodsChange> listener
+                = new AnnotationExcelReaderListener<>(ExchangeExcelForm.PortionAndGoodsChange.class);
+        reader.read(listener);
+        listener.getRecords().forEach(System.out::println);
+    }
+}
+```
