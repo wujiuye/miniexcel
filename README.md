@@ -394,7 +394,7 @@ AbstractExcelReader reader = AbstractExcelReader.getReader(new FileInputStream(f
 AbstractExcelWriter writer = AbstractExcelWriter.getWriter(new FileOutputStream(file),ExcelFileType.XLSX);
 ```
 
-* 2、导出数据的数据类型Class，如Student，能够获取到父类的字段
+* 2、导出与导入的数据类型Class，如Student，能够获取到父类的字段
 
 * 3、提供注解读取监听器AnnotationExcelReaderListener
 
