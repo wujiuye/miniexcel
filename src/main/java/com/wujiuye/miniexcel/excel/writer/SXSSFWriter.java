@@ -58,6 +58,9 @@ class SXSSFWriter extends AbstractExcelWriter {
         }
         try {
             this.realDoWrite();
+            if (outputStream != null) {
+                return null;
+            }
             return new File(this.filePath + this.format.getFromat());
         } catch (Exception e) {
             this.writerListener.onError(e);
