@@ -49,6 +49,8 @@ public class ReflectUtils {
             return Integer.parseInt((String) value);
         } else if (value instanceof Double || value instanceof Float) {
             return new BigDecimal(value.toString()).intValue();
+        } else if (value instanceof Long) {
+            return ((Long) value).intValue();
         } else {
             return null;
         }
@@ -61,6 +63,8 @@ public class ReflectUtils {
             return Long.parseLong((String) value);
         } else if (value instanceof Double || value instanceof Float) {
             return new BigDecimal(value.toString()).longValue();
+        } else if (value instanceof Integer) {
+            return Long.valueOf(value.toString());
         } else {
             return null;
         }
@@ -73,6 +77,8 @@ public class ReflectUtils {
             return Float.parseFloat((String) value);
         } else if (value instanceof Double || value instanceof Float) {
             return new BigDecimal(value.toString()).floatValue();
+        } else if (value instanceof Long) {
+            return ((Long) value).floatValue();
         } else {
             return null;
         }
@@ -85,6 +91,8 @@ public class ReflectUtils {
             return Double.parseDouble((String) value);
         } else if (value instanceof Double || value instanceof Float) {
             return new BigDecimal(value.toString()).doubleValue();
+        } else if (value instanceof Long) {
+            return ((Long) value).doubleValue();
         } else {
             return null;
         }

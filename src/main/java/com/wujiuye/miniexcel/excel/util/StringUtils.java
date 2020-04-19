@@ -31,4 +31,23 @@ public class StringUtils {
         return str == null || str.trim().length() == 0;
     }
 
+
+    /**
+     * 判断一个字符串是否是数字
+     *
+     * @param srt 字符串
+     * @return
+     */
+    public static boolean isNumber(String srt) {
+        if (isEmpty(srt)) {
+            return false;
+        }
+        for (char ch : srt.toCharArray()) {
+            if (ch < '0' || ch > '9') {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
