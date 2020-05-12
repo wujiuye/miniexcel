@@ -443,3 +443,62 @@ public class TestMain{
 更新说明：
 * 修复读取单元格将数字当日期处理问题，无论单元格是日期格式还是数字格式都当前数字处理，具体类型转换交由读取监听器处理；
 
+#### 版本1.3.21-RELEASE
+
+日期：`2020-05-12`\
+版本号：`1.3.21-RELEASE`\
+更新说明：
+* 导入导出支持日期类型（Date），支持指定导出和导入日期格式设置（默认："yyyy-MM-dd HH:mm:ss"），支持时区设置；
+
+```java
+public class SupporDateModel{
+
+    @ExcelCellTitle(datePattern = "yyyy-MM-dd HH", timeZone = 8)
+    private Date date;
+
+}
+```
+> 注意给日期字段配置datePattern，否则导入可能因为格式问题，自动映射字段值异常。
+
+注解是双向使用的，导入和导出都会生效
+```java
+public @interface ExcelCellTitle {
+
+    /**
+     * -1为不参与排序
+     * 用于列的排序
+     *
+     * @return
+     */
+    int cellNumber() default -1;
+
+    /**
+     * 列名，为null时，取属性的字段名
+     *
+     * @return
+     */
+    String alias() default "";
+
+    /**
+     * 是否忽略这列（这个字段）
+     *
+     * @return
+     */
+    boolean ignore() default false;
+
+    /**
+     * 日期类型格式
+     *
+     * @return
+     */
+    String datePattern() default "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * 时区，默认东八区，0表示0时区，8表示东八区，以此类推
+     *
+     * @return
+     */
+    int timeZone() default 8;
+
+}
+```

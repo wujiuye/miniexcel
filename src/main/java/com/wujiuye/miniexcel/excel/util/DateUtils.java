@@ -18,8 +18,11 @@ package com.wujiuye.miniexcel.excel.util;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author wujiuye
@@ -29,78 +32,70 @@ import java.util.Date;
  */
 public class DateUtils {
 
+    private static final ConcurrentMap<String, DateTimeFormatter> FORMATTER_MAP = new ConcurrentHashMap<>();
 
-    /**
-     * 将字符串日期转为Date
-     *
-     * @param strDate
-     * @return
-     */
-    public static Date parsingDate(String strDate) {
-        LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return Date.from(localDate.atStartOfDay()
-                .atZone(ZoneOffset.of("Asia/Shanghai"))
-                .toInstant());
+    private static DateTimeFormatter getFormatter(String pattern) {
+        return FORMATTER_MAP.computeIfAbsent(pattern, s -> DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
      * 将字符串日期转为Date
      *
-     * @param strDate
+     * @param strDate  日期字符串
+     * @param pattern  日期格式
+     * @param timeZone 时区
      * @return
      */
-    public static Date parsingDatetime(String strDate) {
-        LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return Date.from(localDateTime
-                .atZone(ZoneOffset.of("Asia/Shanghai"))
-                .toInstant());
+    public static Date toDate(String strDate, String pattern, int timeZone) {
+        if (StringUtils.isEmpty(strDate)) {
+            return null;
+        }
+        ZoneOffset timeZoneOfferset = getZoneOffersetStr(timeZone);
+        if (pattern.contains("HH")) {
+            LocalDate localDate = LocalDate.parse(strDate, getFormatter(pattern));
+            return Date.from(localDate.atStartOfDay().atZone(timeZoneOfferset).toInstant());
+        } else {
+            LocalDateTime localDate = LocalDateTime.parse(strDate, getFormatter(pattern));
+            return Date.from(localDate.atZone(timeZoneOfferset).toInstant());
+        }
     }
 
     /**
      * date转字符串日期
      *
-     * @param date
+     * @param date     日期
+     * @param pattern  日期格式
+     * @param timeZone 时区
      * @return
      */
-    public static String parsingDate(LocalDate date) {
-        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    public static String fromDate(Date date, String pattern, int timeZone) {
+        if (date == null) {
+            return null;
+        }
+        ZoneOffset timeZoneOfferset = getZoneOffersetStr(timeZone);
+        ZonedDateTime zonedDateTime = date.toInstant().atZone(timeZoneOfferset);
+        if (pattern.contains("HH")) {
+            return zonedDateTime.toLocalDateTime().format(getFormatter(pattern));
+        } else {
+            return zonedDateTime.toLocalDate().atStartOfDay(timeZoneOfferset).format(getFormatter(pattern));
+        }
     }
 
     /**
-     * date转字符串日期
+     * 获取时区的ZoneOffset
+     * ZoneOffset.of底层已经做了缓存
      *
-     * @param date
+     * @param timeZone 取之：-12 ~ 0 ~ +12
      * @return
      */
-    public static String parsingDate(Date date) {
-        return date.toInstant().atZone(ZoneOffset.of("Asia/Shanghai"))
-                .toLocalDate()
-                .atStartOfDay(ZoneOffset.of("Asia/Shanghai"))
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    }
-
-    /**
-     * date转字符串日期
-     *
-     * @param date
-     * @return
-     */
-    public static String parsingDatetime(Date date) {
-        return date.toInstant().atZone(ZoneOffset.of("Asia/Shanghai"))
-                .toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    /**
-     * Localdatetime转Date
-     *
-     * @param date
-     * @return
-     */
-    public static Date parsingDatetime(LocalDateTime date) {
-        return Date.from(date
-                .atZone(ZoneOffset.of("Asia/Shanghai"))
-                .toInstant());
+    private static ZoneOffset getZoneOffersetStr(int timeZone) {
+        String zoneStr;
+        if (timeZone >= 0) {
+            zoneStr = "+" + timeZone;
+        } else {
+            zoneStr = String.valueOf(timeZone);
+        }
+        return ZoneOffset.of(zoneStr);
     }
 
 }

@@ -191,6 +191,7 @@ class SXSSFWriter extends AbstractExcelWriter {
                         cell.setCellValue("");
                         continue;
                     }
+                    ExcelMetaData metaData = titles.get(cellNumber);
                     Class<?> cellClass = cellDateVlaue.getClass();
                     if (cellClass == Integer.class) {
                         cell.setCellValue(Integer.parseInt(cellDateVlaue.toString()));
@@ -201,7 +202,7 @@ class SXSSFWriter extends AbstractExcelWriter {
                     } else if (cellClass == Double.class) {
                         cell.setCellValue(Double.parseDouble(cellDateVlaue.toString()));
                     } else if (cellClass == Date.class) {
-                        cell.setCellValue(DateUtils.parsingDatetime((Date) cellDateVlaue));
+                        cell.setCellValue(DateUtils.fromDate((Date) cellDateVlaue, metaData.getDatePattern(), metaData.getTimezone()));
                     } else {
                         cell.setCellValue(cellDateVlaue.toString());
                     }

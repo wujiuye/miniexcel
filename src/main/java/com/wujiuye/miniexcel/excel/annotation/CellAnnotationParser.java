@@ -69,6 +69,12 @@ public class CellAnnotationParser {
                 } else {
                     metaData.setCellName(cellTitle.alias());
                 }
+                if (field.getType() == Date.class) {
+                    if (cellTitle != null && !StringUtils.isEmpty(cellTitle.datePattern())) {
+                        metaData.setDatePattern(cellTitle.datePattern());
+                        metaData.setTimezone(cellTitle.timeZone());
+                    }
+                }
                 excelMetaData.add(metaData);
             }
         }

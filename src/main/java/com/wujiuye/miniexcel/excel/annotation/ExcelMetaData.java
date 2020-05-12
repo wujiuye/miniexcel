@@ -33,6 +33,11 @@ public class ExcelMetaData {
      * 列名
      */
     private String cellName;
+    /**
+     * 针对日期类型
+     */
+    private String datePattern;
+    private Integer timezone;
 
     public String getFieldName() {
         return field.getName();
@@ -54,4 +59,19 @@ public class ExcelMetaData {
         this.cellName = cellName;
     }
 
+    public String getDatePattern() {
+        return datePattern;
+    }
+
+    public void setDatePattern(String datePattern) {
+        this.datePattern = datePattern;
+    }
+
+    public Integer getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(Integer timezone) {
+        this.timezone = timezone;
+    }
 }

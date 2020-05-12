@@ -30,7 +30,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
 /**
@@ -100,21 +99,14 @@ final class XLSX2007Reader extends AbstractExcelReader {
         private String index = null;
         private int thisColumnIndex;
         private int currentRow;
-
-        // 日期标志
-        // private boolean dateFlag;
-        // 数字标志
-        // private boolean numberFlag;
         private boolean isTElement;
         private Pattern pattern = Pattern.compile("^A[0-9]+$");
-
 
         private SheetHandler(SharedStringsTable sst) {
             this.sst = sst;
             this.currentRow = 0;
             this.thisColumnIndex = 0;
         }
-
 
         /**
          * 开始元素
@@ -139,12 +131,6 @@ final class XLSX2007Reader extends AbstractExcelReader {
                 // 字符串
                 String cellType = attributes.getValue("t");
                 nextIsString = "s".equals(cellType);
-//                // 数字格式
-//                String cellNumberType = attributes.getValue("s");
-//                numberFlag = "2".equals(cellNumberType);
-//                // 日期格式
-//                String cellDateType = attributes.getValue("s");
-//                dateFlag = "1".equals(cellDateType);
             }
             isTElement = "t".equals(name);
             lastContents = "";
@@ -181,18 +167,6 @@ final class XLSX2007Reader extends AbstractExcelReader {
             } else if ("v".equals(name)) {
                 // v => 单元格的值，如果单元格是字符串则v标签的值为该字符串在SST中的索引
                 Object value = lastContents.trim();
-//                if (dateFlag || numberFlag) {
-//                    try {
-//                        BigDecimal bd = new BigDecimal(lastContents.trim());
-//                        if (lastContents.trim().contains(".")) {
-//                            value = bd.longValue();
-//                        } else {
-//                            value = bd.setScale(4, BigDecimal.ROUND_UP).doubleValue();
-//                        }
-//                    } catch (Exception e) {
-//                        value = null;
-//                    }
-//                }
                 if (XLSX2007Reader.this.readCellTitle && currentRow == 1) {
                     XLSX2007Reader.this.excelReaderListener.onReadSheetTitle(thisColumnIndex, lastContents.trim());
                 } else {

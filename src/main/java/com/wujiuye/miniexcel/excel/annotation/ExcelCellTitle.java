@@ -55,4 +55,18 @@ public @interface ExcelCellTitle {
      */
     boolean ignore() default false;
 
+    /**
+     * 日期类型格式
+     *
+     * @return
+     */
+    String datePattern() default "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * 时区，默认东八区，0表示0时区，8表示东八区，以此类推
+     *
+     * @return
+     */
+    int timeZone() default 8;
+
 }

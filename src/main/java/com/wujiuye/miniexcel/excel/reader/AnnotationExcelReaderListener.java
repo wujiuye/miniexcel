@@ -40,12 +40,16 @@ public class AnnotationExcelReaderListener<T> extends ExcelReaderListenerAdapter
      */
     private Map<Integer, String> cellNumberTitleMap;
 
+    protected Map<String, ExcelMetaData> metaDataMap;
+
     public AnnotationExcelReaderListener(Class<T> tClass) {
         this.tClass = tClass;
-        List<ExcelMetaData> metaData = CellAnnotationParser.getFieldWithTargetClass(tClass);
+        List<ExcelMetaData> metaDataList = CellAnnotationParser.getFieldWithTargetClass(tClass);
         fieldMap = new HashMap<>();
-        for (ExcelMetaData excelMetaData : metaData) {
+        metaDataMap = new HashMap<>();
+        for (ExcelMetaData excelMetaData : metaDataList) {
             fieldMap.put(excelMetaData.getCellName(), excelMetaData.getField());
+            metaDataMap.put(excelMetaData.getCellName(), excelMetaData);
         }
         this.rows = new ArrayList<>();
     }
@@ -92,7 +96,7 @@ public class AnnotationExcelReaderListener<T> extends ExcelReaderListenerAdapter
             return;
         }
         try {
-            ReflectUtils.applyValueBy(this.rows.get(this.rows.size() - 1), field, data);
+            ReflectUtils.applyValueBy(this.rows.get(this.rows.size() - 1), field, data, metaDataMap.get(cellName));
         } catch (IllegalAccessException e) {
             throw new RuntimeException("字段赋值失败：" + e.getLocalizedMessage());
         }
