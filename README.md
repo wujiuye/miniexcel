@@ -1,7 +1,10 @@
 # miniexcel
+======================
+[![Maven central](https://maven-badges.herokuapp.com/maven-central/com.github.wujiuye/miniexcel/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.wujiuye/miniexcel)
+[![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 * [使用文档](https://github.com/wujiuye/miniexcel/wiki)
-* [版本更新历史](https://github.com/wujiuye/miniexcel/VERSION.MD)
+* [版本更新历史](https://github.com/wujiuye/miniexcel/blob/master/VERSION.MD)
 
 ## 简介
 `miniexcel`主要目的是解决读写大数据量（上`w`条记录）时导致的`OOM`问题。
