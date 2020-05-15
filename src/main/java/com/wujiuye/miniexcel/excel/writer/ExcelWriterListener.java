@@ -24,7 +24,7 @@ import java.util.List;
 public interface ExcelWriterListener<T> {
 
     /**
-     * 出异常时调用
+     * 出异常时被调用
      */
     default void onError(Exception e) {
         e.printStackTrace();
@@ -35,7 +35,7 @@ public interface ExcelWriterListener<T> {
      *
      * @return
      */
-    Class<?> getDataObjectClass();
+    Class<T> getDataObjectClass();
 
     /**
      * 是否需要自动生成标题输出，使用反射获取范型T的字段名作为标题

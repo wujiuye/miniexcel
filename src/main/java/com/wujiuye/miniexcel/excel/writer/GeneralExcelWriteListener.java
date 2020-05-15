@@ -24,7 +24,7 @@ import java.util.List;
  * 如果是查数据库导出的，不建议使用，而是自己实现接口，因为可以支持分页查询，这样耗内存更少
  * }
  */
-class DefaultExcelWriteListener<T> implements ExcelWriterListener<T> {
+class GeneralExcelWriteListener<T> implements ExcelWriterListener<T> {
 
     private List<T> data;
     private int page;
@@ -36,7 +36,7 @@ class DefaultExcelWriteListener<T> implements ExcelWriterListener<T> {
      * @param data     要导出的数据
      * @param pageSize 页大小
      */
-    public DefaultExcelWriteListener(List<T> data, Integer pageSize) {
+    public GeneralExcelWriteListener(List<T> data, Integer pageSize) {
         this.data = data;
         if (this.data == null) {
             throw new NullPointerException("data is null!!!");
@@ -55,11 +55,11 @@ class DefaultExcelWriteListener<T> implements ExcelWriterListener<T> {
      * @return
      */
     @Override
-    public Class<?> getDataObjectClass() {
+    public Class<T> getDataObjectClass() {
         if (data.size() == 0) {
             throw new NullPointerException("data size is 0!");
         }
-        return data.get(0).getClass();
+        return (Class<T>) data.get(0).getClass();
     }
 
     /**

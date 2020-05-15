@@ -22,6 +22,13 @@ package com.wujiuye.miniexcel.excel.reader;
 public interface ExcelReaderListener {
 
     /**
+     * 出异常时被调用
+     */
+    default void onError(Exception error) {
+
+    }
+
+    /**
      * 开始读取该Sheet
      *
      * @param sheetName sheet名

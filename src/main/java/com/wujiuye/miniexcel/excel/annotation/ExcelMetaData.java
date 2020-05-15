@@ -37,6 +37,9 @@ public class ExcelMetaData {
      * 针对日期类型
      */
     private String datePattern;
+    /**
+     * 时区
+     */
     private Integer timezone;
 
     public String getFieldName() {
@@ -74,4 +77,5 @@ public class ExcelMetaData {
     public void setTimezone(Integer timezone) {
         this.timezone = timezone;
     }
+
 }

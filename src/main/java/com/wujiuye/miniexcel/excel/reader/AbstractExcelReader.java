@@ -37,7 +37,7 @@ public abstract class AbstractExcelReader {
      *
      * @param in            excel文件输入流
      * @param type          文件后缀类型
-     * @param readCellTitle 是否读取列标题
+     * @param readCellTitle 是否把表格的第一行作为标题
      * @return
      */
     public static AbstractExcelReader getReader(InputStream in, ExcelFileType type, boolean readCellTitle) {
@@ -47,6 +47,7 @@ public abstract class AbstractExcelReader {
             case XLSX:
                 return new XLSX2007Reader(in, readCellTitle);
             case CSV:
+                return new CsvReader(in, readCellTitle);
             default:
                 throw new RuntimeException("不支持该文件格式！！！");
         }
@@ -60,11 +61,12 @@ public abstract class AbstractExcelReader {
      * @return
      */
     public static AbstractExcelReader getReader(String filePath, boolean readCellTitle) {
-        //根据文件后缀名不同(xls和xlsx)获得不同的Workbook实现类对象
         if (filePath.toUpperCase().endsWith(".XLS")) {
             return new XLS2003Reader(filePath, readCellTitle);
         } else if (filePath.toUpperCase().endsWith(".XLSX")) {
             return new XLSX2007Reader(filePath, readCellTitle);
+        } else if (filePath.toUpperCase().endsWith(".CSV")) {
+            return new CsvReader(filePath, readCellTitle);
         }
         throw new RuntimeException("不支持该文件格式！！！");
     }
@@ -105,8 +107,14 @@ public abstract class AbstractExcelReader {
             throw new RuntimeException("监控器不能为null！！！");
         }
         this.excelReaderListener = readerListener;
+        if (this.excelReaderListener instanceof AnnotationExcelReaderListener) {
+            if (!readCellTitle) {
+                throw new RuntimeException("使用AnnotationExcelReaderListener，每个Sheet的第一行必须是标题！");
+            }
+        }
         this.doRead();
     }
 
     protected abstract void doRead();
+
 }

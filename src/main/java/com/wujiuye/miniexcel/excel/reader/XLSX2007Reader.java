@@ -80,13 +80,12 @@ final class XLSX2007Reader extends AbstractExcelReader {
                 sheetIndex++;
             }
         } catch (OpenXML4JException | IOException | SAXException e) {
-            e.printStackTrace();
+            this.excelReaderListener.onError(e);
         } finally {
             if (pkg != null) {
                 try {
                     pkg.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ignored) {
                 }
             }
         }

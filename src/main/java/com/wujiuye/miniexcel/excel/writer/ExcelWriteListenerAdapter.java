@@ -15,16 +15,20 @@
  */
 package com.wujiuye.miniexcel.excel.writer;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 默认写监听器的适配器
- * 后续版本会删除
+ * 写监听器适配器
+ * 当data为空时，只导出标题，而不是报错，支持导出模版文件
  *
  * @author wujiuye
  */
-@Deprecated
-public class DefaultExcelWriteListenerAdapter extends GeneralExcelWriteListener {
+public abstract class ExcelWriteListenerAdapter<T> extends GeneralExcelWriteListener<T> {
+
+    private Class<T> tClass;
 
     /**
      * 使用默认写监听器
@@ -32,8 +36,19 @@ public class DefaultExcelWriteListenerAdapter extends GeneralExcelWriteListener 
      * @param data     要导出的数据
      * @param pageSize 页大小
      */
-    public DefaultExcelWriteListenerAdapter(List<?> data, Integer pageSize) {
-        super(data, pageSize);
+    public ExcelWriteListenerAdapter(List<T> data, Integer pageSize) {
+        super(data == null ? new ArrayList<>() : data, pageSize);
+        Type superClass = this.getClass().getGenericSuperclass();
+        if (superClass instanceof Class) {
+            throw new IllegalArgumentException("Internal error: ExcelWriteListenerAdapter constructed without actual type information");
+        } else {
+            this.tClass = (Class<T>) ((ParameterizedType) superClass).getActualTypeArguments()[0];
+        }
+    }
+
+    @Override
+    public Class<T> getDataObjectClass() {
+        return this.tClass;
     }
 
     @Override

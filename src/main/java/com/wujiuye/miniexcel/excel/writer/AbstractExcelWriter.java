@@ -17,10 +17,16 @@ package com.wujiuye.miniexcel.excel.writer;
 
 
 import com.wujiuye.miniexcel.excel.ExcelFileType;
+import com.wujiuye.miniexcel.excel.annotation.CellAnnotationParser;
 import com.wujiuye.miniexcel.excel.annotation.ColumnsDesignator;
+import com.wujiuye.miniexcel.excel.annotation.ExcelMetaData;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wujiuye
@@ -65,6 +71,7 @@ public abstract class AbstractExcelWriter {
             case XLSX:
                 return new SXSSFWriter(ot, format);
             case CSV:
+                return new CsvWriter(ot, format);
             default:
                 throw new FormatException("不支持的格式！！！");
         }
@@ -85,6 +92,8 @@ public abstract class AbstractExcelWriter {
                 excelWriter = new SXSSFWriter(filePath, format);
                 break;
             case CSV:
+                excelWriter = new CsvWriter(filePath, format);
+                break;
             default:
                 throw new FormatException("不支持的格式！！！");
         }
@@ -103,6 +112,9 @@ public abstract class AbstractExcelWriter {
     }
 
     public AbstractExcelWriter setSheetSize(int sheetSize) {
+        if (!(this instanceof CsvWriter) && sheetSize > 1048576) {
+            throw new RuntimeException("每个sheet最大支持1048576行！");
+        }
         this.sheetSize = sheetSize;
         return this;
     }
@@ -121,10 +133,10 @@ public abstract class AbstractExcelWriter {
      * 开始写入
      *
      * @param writerListener 自定义写入监听器，怎么写入你决定
-     * @return
+     * @return 当调用createExcelWriter传的时文件路径时才有值，否则返回Null
      */
     public File write(ExcelWriterListener<?> writerListener) {
-        return this.doWrite(writerListener, null);
+        return this.write(writerListener, null);
     }
 
     /**
@@ -135,11 +147,60 @@ public abstract class AbstractExcelWriter {
      * @return
      */
     public File write(ExcelWriterListener<?> writerListener, ColumnsDesignator columnsDesignator) {
-        return this.doWrite(writerListener, columnsDesignator);
+        if (writerListener == null) {
+            return null;
+        }
+        try {
+            File file = null;
+            if (outputStream == null) {
+                file = new File(this.filePath + this.format.getFromat());
+                outputStream = new FileOutputStream(file);
+            }
+            Class<?> targetClass = writerListener.getDataObjectClass();
+            if (targetClass == null) {
+                throw new RuntimeException("target class not null!!!");
+            }
+            List<ExcelMetaData> metaDatas = this.analysisColumnsMetaDateByClass(targetClass, columnsDesignator);
+            this.doWrite(outputStream, writerListener, metaDatas);
+            return file;
+        } catch (Exception e) {
+            writerListener.onError(e);
+            return null;
+        } finally {
+            // 外部传递进来的输出流不需要关闭
+            if (outputStream instanceof FileOutputStream) {
+                try {
+                    outputStream.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
 
+    /**
+     * 解析类型，获取字段的元数据，完成排序、过滤、给标题别名等操作
+     *
+     * @param targetClass 目标类型
+     * @return
+     */
+    protected List<ExcelMetaData> analysisColumnsMetaDateByClass(Class<?> targetClass, ColumnsDesignator columnsDesignator) {
+        List<ExcelMetaData> metaDatas = CellAnnotationParser.getFieldWithTargetClass(targetClass);
+        // 对列做排序操作
+        metaDatas = CellAnnotationParser.sortField(metaDatas);
+        if (columnsDesignator != null) {
+            // 过滤不需要的字段
+            metaDatas = metaDatas.stream()
+                    .filter(metaData -> !columnsDesignator.isIgnore(metaData.getFieldName()))
+                    .collect(Collectors.toList());
+            // 重命名列标题名称（根据字段名重新赋予导出的文件的列标题名）
+            metaDatas.forEach(metaData ->
+                    metaData.setCellName(columnsDesignator.renameColumn(metaData.getFieldName(), metaData.getCellName())));
+        }
+        return metaDatas;
+    }
 
-    protected abstract File doWrite(ExcelWriterListener<?> writerListener, ColumnsDesignator columnsDesignator);
-
+    protected abstract void doWrite(OutputStream ot,
+                                    ExcelWriterListener<?> writerListener,
+                                    List<ExcelMetaData> metaDatas);
 
 }

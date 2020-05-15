@@ -16,30 +16,22 @@
 package com.wujiuye.miniexcel.excel.writer;
 
 import com.wujiuye.miniexcel.excel.ExcelFileType;
-import com.wujiuye.miniexcel.excel.annotation.ColumnsDesignator;
 import com.wujiuye.miniexcel.excel.annotation.ExcelMetaData;
-import com.wujiuye.miniexcel.excel.annotation.CellAnnotationParser;
 import com.wujiuye.miniexcel.excel.util.DateUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author wujiuye
  * @version 1.0 on 2019/4/30 {描述：}
  */
 class SXSSFWriter extends AbstractExcelWriter {
-
-    private ExcelWriterListener<?> writerListener;
-    private ColumnsDesignator columnsDesignator;
 
     SXSSFWriter(String filePath, ExcelFileType format) {
         super(filePath, format);
@@ -50,32 +42,8 @@ class SXSSFWriter extends AbstractExcelWriter {
     }
 
     @Override
-    protected File doWrite(ExcelWriterListener<?> writerListener, ColumnsDesignator columnsDesignator) {
-        this.writerListener = writerListener;
-        this.columnsDesignator = columnsDesignator;
-        if (writerListener == null) {
-            return null;
-        }
-        try {
-            this.realDoWrite();
-            if (outputStream != null) {
-                return null;
-            }
-            return new File(this.filePath + this.format.getFromat());
-        } catch (Exception e) {
-            this.writerListener.onError(e);
-            return null;
-        }
-    }
-
-    private void realDoWrite() throws Exception {
-        boolean needWriter = this.writerListener.autoGenerateTitle();
-        Class<?> targetClass = this.writerListener.getDataObjectClass();
-        if (targetClass == null) {
-            throw new RuntimeException("target class not null!!!");
-        }
-        List<ExcelMetaData> metaDatas = this.analysisColumnsMetaDateByClass(targetClass);
-
+    protected void doWrite(OutputStream ot, ExcelWriterListener<?> writerListener, List<ExcelMetaData> metaDatas) {
+        boolean needWriter = writerListener.autoGenerateTitle();
         // SXSSFWorkbook会先在磁盘创建空间来写，此时并未输出到目标文件
         SXSSFWorkbook wb = new SXSSFWorkbook(this.brushPageSize);
         int sheetNumber = 1;
@@ -88,8 +56,8 @@ class SXSSFWriter extends AbstractExcelWriter {
         if (needWriter) {
             rowIndex += writeTitle(sh, metaDatas);
         }
-        while ((currentPageSize = this.writerListener.getNetOutputDataRealSize(sheetNumber)) != 0) {
-            List<?> data = this.writerListener.getOutputDataWithSheetNumber(sheetNumber, nextLimit, nextLimit + currentPageSize);
+        while ((currentPageSize = writerListener.getNetOutputDataRealSize(sheetNumber)) != 0) {
+            List<?> data = writerListener.getOutputDataWithSheetNumber(sheetNumber, nextLimit, nextLimit + currentPageSize);
             rowIndex = writeData(sh, metaDatas, data, rowIndex);
             nextLimit += currentPageSize;
 
@@ -104,50 +72,14 @@ class SXSSFWriter extends AbstractExcelWriter {
                 }
             }
         }
-
-        // 输出到目标文件
-        if (outputStream != null) {
-            try {
-                // 由外部负责关闭流
-                wb.write(outputStream);
-            } catch (Exception e) {
-                this.writerListener.onError(e);
-            } finally {
-                // 释放磁盘上备份此工作簿的临时文件
-                wb.dispose();
-            }
-        } else {
-            try (FileOutputStream fileOut = new FileOutputStream(this.filePath + this.format.getFromat())) {
-                wb.write(fileOut);
-            } catch (Exception e) {
-                this.writerListener.onError(e);
-            } finally {
-                // 释放磁盘上备份此工作簿的临时文件
-                wb.dispose();
-            }
+        try {
+            wb.write(outputStream);
+        } catch (Exception e) {
+            writerListener.onError(e);
+        } finally {
+            // 释放磁盘上备份此工作簿的临时文件
+            wb.dispose();
         }
-    }
-
-    /**
-     * 解析类型，获取字段的元数据，完成排序、过滤、给标题别名等操作
-     *
-     * @param targetClass
-     * @return
-     */
-    private List<ExcelMetaData> analysisColumnsMetaDateByClass(Class<?> targetClass) {
-        List<ExcelMetaData> metaDatas = CellAnnotationParser.getFieldWithTargetClass(targetClass);
-        // 对列做排序操作
-        metaDatas = CellAnnotationParser.sortField(metaDatas);
-        if (columnsDesignator != null) {
-            // 过滤不需要的字段
-            metaDatas = metaDatas.stream()
-                    .filter(metaData -> !columnsDesignator.isIgnore(metaData.getFieldName()))
-                    .collect(Collectors.toList());
-            // 重命名列标题名称（根据字段名重新赋予导出的文件的列标题名）
-            metaDatas.forEach(metaData -> metaData.setCellName(
-                    columnsDesignator.renameColumn(metaData.getFieldName(), metaData.getCellName())));
-        }
-        return metaDatas;
     }
 
     /**

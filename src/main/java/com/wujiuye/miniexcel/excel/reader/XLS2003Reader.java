@@ -51,7 +51,7 @@ final class XLS2003Reader extends AbstractExcelReader {
                 // 处理inputstream
                 factory.processEvents(req, inputStream);
             } catch (Exception e) {
-                throw new RuntimeException(e.getLocalizedMessage(), e);
+                this.excelReaderListener.onError(e);
             }
         } else {
             try (FileInputStream is = new FileInputStream(filePath);
@@ -64,7 +64,7 @@ final class XLS2003Reader extends AbstractExcelReader {
                 // 处理inputstream
                 factory.processEvents(req, inputStream);
             } catch (Exception e) {
-                throw new RuntimeException(e.getLocalizedMessage(), e);
+                this.excelReaderListener.onError(e);
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.wujiuye.miniexcel.test.model;
 
 import com.wujiuye.miniexcel.excel.annotation.ExcelCellTitle;
+import com.wujiuye.miniexcel.excel.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,12 +41,10 @@ public class DateModel {
 
     @Override
     public String toString() {
-        return "DateModel{" +
-                "xxxx='" + xxxx + '\'' +
-                ", yyy=" + yyy +
-                ", xxx=" + xxx +
-                ", date=" + date +
-                '}';
+        return xxxx + ',' +
+                yyy + ',' +
+                xxx + ',' +
+                DateUtils.fromDate(date, "yyyy-MM-dd HH:mm:ss", 8);
     }
 
 }
