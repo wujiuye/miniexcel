@@ -6,19 +6,14 @@
 版本号：`1.1.0-RELEASE`\
 更新说明：
 * 1、提供默认的写监听器，应付大部分小数据导出场景。
-* 2、提供导出列指示器，实现导出列指示器可以在不使用`@ExcelCellTitle`注解的情况下，设置导出忽略的字段，设置字段对应导`excel`的列标题。
+* 2、提供导出列指示器。
 
 ```java
-/**
- * @author wujiuye
- * @version 1.0 on 2019/10/10 {描述：
- * 列指示器
- * }
- */
 public interface ColumnsDesignator {
 
     /**
      * 是否忽略该列
+     * 一般使用注解，除非有特殊需求
      *
      * @param column data的数据类型的字段名
      * @return
@@ -27,39 +22,14 @@ public interface ColumnsDesignator {
 
     /**
      * 是否需要重命名
+     * 一般使用注解，除非有特殊需求
      *
-     * @param column data的数据类型的字段名
-     * @return 不需要重命名则直接返回参数column，需要重命名则返回重命名后的列名（excel文件的标题名称）
+     * @param fieldName         data的数据类型的字段名
+     * @param currentColumnName 当前使用的列名，也就是从注解上面获取的，如果注解没有配置，则等于字段名
+     * @return 不需要重命名则直接返回参数currentColumnName，需要重命名则返回重命名后的列名（excel文件的标题名称）
      */
-    String renameColumn(String column);
+    String renameColumn(String fieldName, String currentColumnName);
 
-}
-```
-
-```java
-public class TestMain{
-    public void testWrite(){
-        File target = writer.write(new DefaultExcelWriteListenerAdapter(dataList, 1000), new ColumnsDesignator() {
-
-            @Override
-            public boolean isIgnore(String column) {
-                if (CollectionUtils.isEmpty(columns)) {
-                    return false;
-                }
-                return !columns.contains(column);
-            }
-
-            @Override
-            public String renameColumn(String column) {
-                if (CollectionUtils.isEmpty(columns)
-                        || CollectionUtils.isEmpty(columnNames)) {
-                    return column;
-                }
-                int index = columns.indexOf(column);
-                return columnNames.get(index);
-            }
-        });
-    }
 }
 ```
 
