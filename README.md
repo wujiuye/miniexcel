@@ -1,7 +1,7 @@
 # miniexcel
 
-[使用文档](https://github.com/wujiuye/miniexcel/wiki)
-[版本更新历史](https://github.com/wujiuye/miniexcel/VERSION.MD)
+* [使用文档](https://github.com/wujiuye/miniexcel/wiki)
+* [版本更新历史](https://github.com/wujiuye/miniexcel/VERSION.MD)
 
 ## 简介
 `miniexcel`主要目的是解决读写大数据量（上`w`条记录）时导致的`OOM`问题。
