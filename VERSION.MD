@@ -179,7 +179,7 @@ public @interface ExcelCellTitle {
 ## 版本1.4.01-RELEASE
 
 日期：`2020-05-16`\
-版本号：`1.4.00-RELEASE`\
+版本号：`1.4.01-RELEASE`\
 更新说明：
 * 支持CSV格式的导入导出（不依赖poi）；
 * 支持导出数据为空，为空时只导出标题，目的时支持导出模版；

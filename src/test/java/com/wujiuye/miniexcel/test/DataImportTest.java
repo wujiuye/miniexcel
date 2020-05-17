@@ -17,7 +17,7 @@ public class DataImportTest {
 
     @Test
     public void testImport() {
-        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.xlsx", true);
+        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.xlsx");
         AnnotationExcelReaderListener<DateModel> readerListener = new AnnotationExcelReaderListener<>(DateModel.class);
         excelReader.read(readerListener);
         List<DateModel> dateModelList = readerListener.getRecords();
@@ -28,7 +28,7 @@ public class DataImportTest {
 
     @Test
     public void testDefault() {
-        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.xlsx", true);
+        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.xlsx");
         DefaultExcelReaderListener readerListener = new DefaultExcelReaderListener("订单ID", "会员ID");
         excelReader.read(readerListener);
         List<Map<String, Object>> data = readerListener.getData();
@@ -36,7 +36,7 @@ public class DataImportTest {
 
     @Test
     public void testDayRead() {
-        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.xlsx", true);
+        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.xlsx");
         ExcelReaderListener readerListener = new ExcelReaderListenerAdapter() {
             @Override
             public void onReadRow(Object data, int rowNumber, int cellNumber) {
@@ -49,7 +49,7 @@ public class DataImportTest {
 
     @Test
     public void testImportCsv() {
-        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.csv", true);
+        AbstractExcelReader excelReader = AbstractExcelReader.getReader("/tmp/miniexcel-test.csv");
         AnnotationExcelReaderListener<DateModel> readerListener = new AnnotationExcelReaderListener<>(DateModel.class);
         excelReader.read(readerListener);
         List<DateModel> dateModelList = readerListener.getRecords();
@@ -60,7 +60,7 @@ public class DataImportTest {
 
     @Test
     public void testImportByIn() {
-        AbstractExcelReader excelReader = AbstractExcelReader.getReader(System.in, ExcelFileType.XLS, true);
+        AbstractExcelReader excelReader = AbstractExcelReader.getReader(System.in, ExcelFileType.XLS);
         AnnotationExcelReaderListener<DateModel> readerListener = new AnnotationExcelReaderListener<>(DateModel.class);
         excelReader.read(readerListener);
         List<DateModel> dateModelList = readerListener.getRecords();

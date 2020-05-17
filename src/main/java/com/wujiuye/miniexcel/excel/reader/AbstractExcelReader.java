@@ -32,6 +32,10 @@ public abstract class AbstractExcelReader {
     protected InputStream inputStream;
     protected ExcelReaderListener excelReaderListener;
 
+    public static AbstractExcelReader getReader(InputStream in, ExcelFileType type) {
+        return getReader(in, type);
+    }
+
     /**
      * 根据文件输入流和文件类型创建一个读取器
      *
@@ -51,6 +55,10 @@ public abstract class AbstractExcelReader {
             default:
                 throw new RuntimeException("不支持该文件格式！！！");
         }
+    }
+
+    public static AbstractExcelReader getReader(String filePath) {
+        return getReader(filePath, true);
     }
 
     /**
