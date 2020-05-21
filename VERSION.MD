@@ -193,3 +193,27 @@ public class ExportTest{
 
 }
 ```
+
+## 版本1.4.02-RELEASE
+
+日期：`2020-05-21`\
+版本号：`1.4.02-RELEASE`\
+更新说明：
+* 1、支持全局配置。如果需要使用全局配置，则在resources目录下创建一个miniexcel.properties文件，当前支持的配置项如下。
+```properties
+miniexcel.ignore_transient_field=true
+miniexcel.ignore_not_exist_annotation_field=true
+miniexcel.date_global_cfg.date_pattern=yyyy-MM-dd HH
+miniexcel.date_global_cfg.time_zone=8
+```
+
+配置的优先级说明：
+* 1、注解。对于导出：如果是使用继承ExcelWriteListenerAdapter的写监听器；对于导入：如果使用的是AnnotationExcelReaderListener；
+* 2、全局配置。
+* 3、框架默认。
+
+miniexcel.properties当前支持的配置项：
+* ignore_transient_field：是否忽略添加了transient关键字的字段，默认为false；
+* ignore_not_exist_annotation_field：是否忽略没有添加ExcelCellTitle注解的字段，默认为false；
+* date_global_cfg.date_pattern：日期配置，配置日期格式；
+* date_global_cfg.time_zone：日期配置，配置时区；
