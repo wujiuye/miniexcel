@@ -57,16 +57,21 @@ public @interface ExcelCellTitle {
 
     /**
      * 日期类型格式
+     * 配置优先级：
+     * 注解 > 全局配置 > 框架默认
+     * 当datePattern为""时，则从全局配置取，如果全局配置也没有配置，则使用框架默认的"yyyy-MM-dd HH:mm:ss"
      *
      * @return
      */
-    String datePattern() default "yyyy-MM-dd HH:mm:ss";
+    String datePattern() default "";
 
     /**
      * 时区，默认东八区，0表示0时区，8表示东八区，以此类推
+     * 取值范围是[-12,13]
+     * 当取之超出该合法范围时，则认为没有配置时区，会从全局配置文件取，如果全局配置文件也没有，则使用框架默认的，默认为东8区
      *
      * @return
      */
-    int timeZone() default 8;
+    int timeZone() default Integer.MIN_VALUE;
 
 }

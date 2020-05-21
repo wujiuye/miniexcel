@@ -20,7 +20,7 @@ public class DateModel {
     private int yyy;
     @ExcelCellTitle
     private Integer xxx;
-    @ExcelCellTitle(cellNumber = 1, alias = "别名", datePattern = "yyyy-MM-dd HH", timeZone = 8)
+    @ExcelCellTitle(cellNumber = 1, alias = "别名", datePattern = "yyyy-MM-dd HH:mm:ss", timeZone = 8)
     private Date date;
 
     public static List<DateModel> getTestData() {
