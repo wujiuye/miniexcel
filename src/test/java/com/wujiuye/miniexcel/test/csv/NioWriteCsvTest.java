@@ -1,5 +1,7 @@
 package com.wujiuye.miniexcel.test.csv;
 
+import com.wujiuye.miniexcel.excel.reader.AbstractExcelReader;
+import com.wujiuye.miniexcel.excel.reader.ExcelReaderListener;
 import com.wujiuye.miniexcel.test.model.DateModel;
 import org.junit.Test;
 
@@ -19,7 +21,30 @@ import java.util.List;
 public class NioWriteCsvTest {
 
     @Test
-    public void testCsv() throws IOException {
+    public void testReadCsv() {
+        String fileName = "/tmp/1627665504259.csv";
+        AbstractExcelReader reader = AbstractExcelReader.getReader(fileName);
+        reader.read(new ExcelReaderListener() {
+            @Override
+            public void onReadSheetStart(String sheetName) {
+                System.out.println("sheetName=>" + sheetName);
+            }
+
+            @Override
+            public void onReadSheetTitle(int cellNumber, String cellTitle) {
+                System.out.println("onReadSheetTitle=>[" + cellNumber + "," + cellTitle + "]");
+            }
+
+            @Override
+            public void onReadRow(Object data, int rowNumber, int cellNumber) {
+                System.out.println("onReadRow=>[" + rowNumber + "," + cellNumber + "," + data + "]");
+            }
+        });
+        System.out.println("finish....");
+    }
+
+    @Test
+    public void testWriteCsv() throws IOException {
         while (!Thread.interrupted()) {
             List<DateModel> modelList = new ArrayList<>(1000000);
             for (int i = 0; i < 100000; i++) {
