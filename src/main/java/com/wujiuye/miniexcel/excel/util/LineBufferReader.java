@@ -54,9 +54,9 @@ public class LineBufferReader {
             lastIndex = startIndex;
             return;
         }
-        int newCap = (buff.length - lastIndex) + len;
+        int newCap = (buff.length - lastIndex + 1) + len;
         byte[] newBuff = new byte[newCap];
-        mappedByteBuffer.get(newBuff, (buff.length - lastIndex), len);
+        mappedByteBuffer.get(newBuff, (buff.length - lastIndex + 1), len);
         readLenth += len;
         if (lastIndex < buff.length) {
             System.arraycopy(buff, lastIndex, newBuff, 0, buff.length - lastIndex);
@@ -86,7 +86,7 @@ public class LineBufferReader {
                 }
             }
 
-            if (skipLF && startIndex == i) {
+            if (skipLF && startIndex == i - 1) {
                 startIndex = i + 1;
                 lastIndex = startIndex;
                 skipLF = false;
